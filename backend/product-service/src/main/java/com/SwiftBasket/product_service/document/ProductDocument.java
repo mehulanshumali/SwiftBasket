@@ -33,11 +33,6 @@ public class ProductDocument {
     
     @Field(type = FieldType.Keyword)
     private String categoryName;
-    @Field(type = FieldType.Keyword)
-    private String sku;
-    
-    @Field(type = FieldType.Boolean)
-    private Boolean active;
 
     @Field(type = FieldType.Text)
     private String imageUrl;

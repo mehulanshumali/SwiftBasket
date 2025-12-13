@@ -40,17 +40,8 @@ public class Product {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(name = "stock_quantity", nullable = false)
-    private Integer stockQuantity;
-
     @Column(name = "image_url")
     private String imageUrl;
-    
-    @Column(nullable = false, unique = true)
-    private String sku;
-
-    @Column(nullable = false)
-    private Boolean active;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", nullable = false)

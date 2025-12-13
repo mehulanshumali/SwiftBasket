@@ -2,9 +2,15 @@ package com.SwiftBasket.product_service.dto.response;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PagedResponse<T> {
     private List<T> content;      // The actual list of Products/Categories
     private int pageNumber;       // Current page (e.g., 0)
