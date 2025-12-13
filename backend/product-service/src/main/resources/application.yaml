@@ -1,0 +1,32 @@
+server:
+  port: 8082 # Unique port
+
+spring:
+  application:
+    name: product-service
+  
+  # Primary Database (MySQL)
+  datasource:
+    url: jdbc:mysql://localhost:3306/product_db?useSSL=false&allowPublicKeyRetrieval=true
+    username: swiftbasket_user
+    password: securepass
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  # Search Engine (Elasticsearch)
+  elasticsearch:
+    uris: http://localhost:9200
+    socket-timeout: 10000ms
+
+  # Kafka (To listen for stock updates or publish product changes)
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
