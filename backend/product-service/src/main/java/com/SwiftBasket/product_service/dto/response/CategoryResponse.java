@@ -1,5 +1,10 @@
 package com.SwiftBasket.product_service.dto.response;
 
-public class CategoryResponse {
+import lombok.Data;
 
+@Data
+public class CategoryResponse {
+    private Long id;
+    private String name;
+    private String description;
 }

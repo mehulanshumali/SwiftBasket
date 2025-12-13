@@ -47,10 +47,10 @@ public class Product {
     private String imageUrl;
     
     @Column(nullable = false, unique = true)
-    private String sku; // Stock Keeping Unit for inventory tracking
+    private String sku;
 
     @Column(nullable = false)
-    private Boolean active; // Soft delete flag
+    private Boolean active;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", nullable = false)
