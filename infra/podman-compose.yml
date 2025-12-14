@@ -1,11 +1,18 @@
 version: '3.8'
 
+# Podman Compose compatibility notes:
+# - Podman supports most Docker Compose syntax
+# - Use `podman-compose` instead of `docker-compose`
+# - Networks work differently: containers can reference each other by service name
+# - For macOS/Windows with Podman Desktop, ensure Podman machine is running
+# - For rootless Podman, some volume mounts may need permission adjustments
+
 services:
   # ------------------------------------------------------------
   # MySQL - Stores User, Product, Order, and Payment data 
   # ------------------------------------------------------------
   mysqldb:
-    image: mysql:8.0
+    image: docker.io/library/mysql:8.0
     container_name: swiftbasket-mysql
     restart: always
     environment:
@@ -13,45 +20,60 @@ services:
       MYSQL_USER: swiftbasket_user
       MYSQL_PASSWORD: securepass
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       # Mounts the init script to create all 4 DBs automatically
-      - ./mysql-init:/docker-entrypoint-initdb.d
+      - ./mysql-init:/docker-entrypoint-initdb.d:Z
     networks:
       - swiftbasket-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   # ------------------------------------------------------------
   # MongoDB - Stores Cart data (Flexible Schema) 
   # ------------------------------------------------------------
   mongodb:
-    image: mongo:latest
+    image: docker.io/library/mongo:latest
     container_name: swiftbasket-mongo
     restart: always
     ports:
       - "27017:27017"
     volumes:
-      - mongo_data:/data/db
+      - mongo_data:/data/db:Z
     networks:
       - swiftbasket-net
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   # ------------------------------------------------------------
   # Redis - Caching for Cart Service 
   # ------------------------------------------------------------
   redis:
-    image: redis:alpine
+    image: docker.io/library/redis:alpine
     container_name: swiftbasket-redis
     restart: always
     ports:
       - "6379:6379"
     networks:
       - swiftbasket-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 10s
+      retries: 5
+      start_period: 20s
 
   # ------------------------------------------------------------
-  # Zookeeper - Required for Kafka [cite: 73]
+  # Zookeeper - Required for Kafka
   # ------------------------------------------------------------
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
+    image: docker.io/confluentinc/cp-zookeeper:latest
     container_name: swiftbasket-zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -60,63 +82,71 @@ services:
       - "2181:2181"
     networks:
       - swiftbasket-net
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo ruok | nc -w 2 localhost 2181"]
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   # ------------------------------------------------------------
   # Kafka - Message Broker 
   # ------------------------------------------------------------
   kafka:
-    image: confluentinc/cp-kafka:latest
+    image: docker.io/confluentinc/cp-kafka:latest
     container_name: swiftbasket-kafka
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
     ports:
       - "9092:9092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      # Listeners allow connecting from inside Docker (INTERNAL) and your Local Machine (EXTERNAL)
+      # Listeners allow connecting from inside Podman (INTERNAL) and your Local Machine (EXTERNAL)
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - swiftbasket-net
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions.sh", "--bootstrap-server=localhost:9092"]
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   # ------------------------------------------------------------
   # Elasticsearch - For Product Search 
   # ------------------------------------------------------------
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.10
+    image: docker.io/elastic/elasticsearch:7.17.10
     container_name: swiftbasket-elastic
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # Limit memory usage
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
     volumes:
-      - es_data:/usr/share/elasticsearch/data
+      - es_data:/usr/share/elasticsearch/data:Z
     networks:
       - swiftbasket-net
-  
-  # ------------------------------------------------------------
-  # Zipkin - Distributed Tracing (New)
-  # ------------------------------------------------------------
-  zipkin:
-    image: openzipkin/zipkin
-    container_name: ecommerce-zipkin
-    ports:
-      - "9411:9411"
-    networks:
-      - ecommerce-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"yellow\\|green\"'"]
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
 # ------------------------------------------------------------
 # Volumes & Networks
 # ------------------------------------------------------------
 volumes:
   mysql_data:
+    driver: local
   mongo_data:
+    driver: local
   es_data:
+    driver: local
 
 networks:
   swiftbasket-net:
