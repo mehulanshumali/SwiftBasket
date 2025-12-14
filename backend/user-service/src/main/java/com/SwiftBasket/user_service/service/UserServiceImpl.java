@@ -12,11 +12,13 @@ import com.SwiftBasket.user_service.dto.LoginRequest;
 import com.SwiftBasket.user_service.dto.LoginResponse;
 import com.SwiftBasket.user_service.dto.RegisterRequest;
 import com.SwiftBasket.user_service.dto.UserProfileResponse;
+import com.SwiftBasket.user_service.entity.PasswordResetToken;
 import com.SwiftBasket.user_service.entity.User;
 import com.SwiftBasket.user_service.event.UserRegisteredEvent;
 import com.SwiftBasket.user_service.exception.InvalidCredentialsException;
 import com.SwiftBasket.user_service.exception.UserAlreadyExistsException;
 import com.SwiftBasket.user_service.exception.UserNotFoundException;
+import com.SwiftBasket.user_service.repository.PasswordResetTokenRepository;
 import com.SwiftBasket.user_service.repository.UserRepository;
 import com.SwiftBasket.user_service.util.JwtTokenProvider;
 
@@ -36,6 +38,14 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private KafkaTemplate<String, UserRegisteredEvent> kafkaTemplate;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    private static final long PASSWORD_RESET_TOKEN_EXPIRATION_HOURS = 1;
 
     @Value("${kafka_topic.name}")
     private String userRegisteredTopic;
@@ -141,21 +151,51 @@ public class UserServiceImpl implements UserService {
         log.info("Password reset initiated for email: {}", email);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
-        // TODO: Generate reset token and save it with expiration
-        // TODO: Send email with reset link via Kafka event
-    }
+        String resetToken = PasswordResetToken.generateToken();
+        LocalDateTime expiryDate = LocalDateTime.now().plusHours(PASSWORD_RESET_TOKEN_EXPIRATION_HOURS);
+        passwordResetTokenRepository.deleteByUserIdAndIsUsedTrue(user.getId());
+        PasswordResetToken token = PasswordResetToken.builder()
+                .token(resetToken)
+                .user(user)
+                .expiryDate(expiryDate)
+                .isUsed(false)
+                .build();
+        passwordResetTokenRepository.save(token);
+        log.info("Password reset token generated for user ID: {}", user.getId());
+
+        try {
+            emailService.sendPasswordResetEmail(user.getEmail(), user.getFullName(), resetToken);
+        } catch (Exception e) {
+            log.error("Failed to send password reset email: {}", e.getMessage());
+        }
+}
 
     @Override
     public void resetPassword(String token, String newPassword) {
         log.info("Password reset attempt with token");
-        // TODO: Validate token from DB
-        // TODO: Find user and update password
-        // TODO: Invalidate token
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token)
+                .orElseThrow(() -> {
+                    log.warn("Invalid password reset token");
+                    return new InvalidCredentialsException("Invalid or expired password reset token");
+                });
+        if (!resetToken.isValid()) {
+            log.warn("Expired or already used password reset token");
+            throw new InvalidCredentialsException("Invalid or expired password reset token");
+        }
+        User user = resetToken.getUser();
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        log.info("Password reset successfully for user ID: {}", user.getId());
+
+        resetToken.setIsUsed(true);
+        passwordResetTokenRepository.save(resetToken);
+        log.info("Password reset completed successfully for user ID: {}", user.getId());    
     }
+
     @Override
     public Long validateToken(String token) {
         log.info("Validating token");
-        
+
         if (token == null || token.isEmpty()) {
             log.warn("Token is null or empty");
             throw new InvalidCredentialsException("Invalid or expired token");

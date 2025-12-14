@@ -45,11 +45,9 @@ public class UserController {
     private UserMapper userMapper;
 
     @PostMapping("/register")
-    @Operation(summary = "Register a new user", 
-               description = "Creates a new user account with email and password. Returns 201 Created on success.")
+    @Operation(summary = "Register a new user",  description = "Creates a new user account with email and password. Returns 201 Created on success.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User registered successfully",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileResponse.class))),
+            @ApiResponse(responseCode = "201", description = "User registered successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileResponse.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input - email or password format"),
             @ApiResponse(responseCode = "409", description = "User with this email already exists")
     })
@@ -61,11 +59,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "Login user", 
-               description = "Authenticates user with email and password. Returns JWT token on success.")
+    @Operation(summary = "Login user",  description = "Authenticates user with email and password. Returns JWT token on success.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Login successful",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Login successful", content = @Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponse.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input format"),
             @ApiResponse(responseCode = "401", description = "Invalid email or password")
     })
@@ -76,12 +72,10 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    @Operation(summary = "Get current user profile", 
-               description = "Retrieves the profile information of the authenticated user. Requires Bearer token.")
+    @Operation(summary = "Get current user profile",  description = "Retrieves the profile information of the authenticated user. Requires Bearer token.")
     @SecurityRequirement(name = "bearer-jwt")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User profile retrieved successfully",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileResponse.class))),
+            @ApiResponse(responseCode = "200", description = "User profile retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized - invalid or missing token"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
@@ -95,12 +89,10 @@ public class UserController {
     }
 
     @PutMapping("/me")
-    @Operation(summary = "Update user profile", 
-               description = "Updates user profile information (name, phone, address). Requires Bearer token.")
+    @Operation(summary = "Update user profile", description = "Updates user profile information (name, phone, address). Requires Bearer token.")
     @SecurityRequirement(name = "bearer-jwt")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Profile updated successfully",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Profile updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileResponse.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "401", description = "Unauthorized - invalid or missing token"),
             @ApiResponse(responseCode = "404", description = "User not found")
@@ -116,8 +108,7 @@ public class UserController {
     }
 
     @PostMapping("/password-reset")
-    @Operation(summary = "Request password reset", 
-               description = "Initiates password reset process. Sends reset link to user email.")
+    @Operation(summary = "Request password reset",  description = "Initiates password reset process. Sends reset link to user email.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Password reset link sent (if email exists)"),
             @ApiResponse(responseCode = "400", description = "Invalid email format")
@@ -129,8 +120,7 @@ public class UserController {
     }
 
     @PostMapping("/reset-password")
-    @Operation(summary = "Reset password with token", 
-               description = "Completes password reset using the token sent to user email.")
+    @Operation(summary = "Reset password with token", description = "Completes password reset using the token sent to user email.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Password reset successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input or expired token"),
@@ -143,8 +133,7 @@ public class UserController {
     }
 
     @GetMapping("/validate")
-    @Operation(summary = "Validate JWT token", 
-               description = "Validates JWT token and returns user ID. Used by API Gateway for session validation.")
+    @Operation(summary = "Validate JWT token", description = "Validates JWT token and returns user ID. Used by API Gateway for session validation.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Token is valid, returns user ID"),
             @ApiResponse(responseCode = "401", description = "Token is invalid or expired")
@@ -187,8 +176,7 @@ public class UserController {
     }
 
     @GetMapping("/health")
-    @Operation(summary = "Health check", 
-               description = "Simple health check endpoint to verify service is running.")
+    @Operation(summary = "Health check", description = "Simple health check endpoint to verify service is running.")
     @ApiResponse(responseCode = "200", description = "Service is healthy")
     public ResponseEntity<String> health() {
         return ResponseEntity.ok("User Service is running");
