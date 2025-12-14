@@ -92,7 +92,7 @@ services:
   # Kafka - Message Broker 
   # ------------------------------------------------------------
   kafka:
-    image: docker.io/confluentinc/cp-kafka:latest
+    image: docker.io/confluentinc/cp-kafka:7.5.0
     container_name: swiftbasket-kafka
     depends_on:
       zookeeper:

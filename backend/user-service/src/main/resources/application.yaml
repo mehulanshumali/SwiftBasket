@@ -36,3 +36,14 @@ jwt:
 # Kafka Topics
 kafka_topic:
   name: user.registered
+
+# Swagger/OpenAPI Configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: method  # Sort by HTTP method (GET, POST, etc.)
+    tags-sorter: alpha  # Sort tags alphabetically
+    display-request-duration: true

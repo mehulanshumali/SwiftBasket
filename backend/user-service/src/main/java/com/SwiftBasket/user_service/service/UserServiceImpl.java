@@ -16,6 +16,7 @@ import com.SwiftBasket.user_service.entity.User;
 import com.SwiftBasket.user_service.event.UserRegisteredEvent;
 import com.SwiftBasket.user_service.exception.InvalidCredentialsException;
 import com.SwiftBasket.user_service.exception.UserAlreadyExistsException;
+import com.SwiftBasket.user_service.exception.UserNotFoundException;
 import com.SwiftBasket.user_service.repository.UserRepository;
 import com.SwiftBasket.user_service.util.JwtTokenProvider;
 
@@ -53,6 +54,7 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
                 .email(request.getEmail())
                 .passwordHash(hashedPassword)
+                .fullName(request.getFullName())
                 .build();
 
         User savedUser = userRepository.save(user);
@@ -93,26 +95,90 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserProfile(Long userId) {
-        return null;
+        log.info("Fetching user profile for user ID: {}", userId);
+        return userRepository.findById(userId).orElseThrow(() -> {
+            log.warn("User not found with ID: {}", userId);
+            return new UserNotFoundException("User not found");
+        });
     }
 
     @Override
     public User updateProfile(Long userId, UserProfileResponse profileRequest) {
-        return null;
+        log.info("Updating user profile for user ID: {}", userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            log.warn("User not found with ID: {}", userId);
+            return new UserNotFoundException("User not found");
+        });
+
+        if(profileRequest.getFullName() != null) {
+            user.setFullName(profileRequest.getFullName());
+        }
+
+        if(profileRequest.getPhoneNumber() != null) {
+            user.setPhoneNumber(profileRequest.getPhoneNumber());
+        }
+
+        if(profileRequest.getAddress() != null) {
+            user.setAddress(profileRequest.getAddress());
+        }
+
+        if(profileRequest.getEmail() != null && !profileRequest.getEmail().equals(user.getEmail())) {
+            if (userRepository.existsByEmail(profileRequest.getEmail())) {
+                log.warn("Email already in use: {}", profileRequest.getEmail());
+                throw new UserAlreadyExistsException("Email is already in use by another account");
+            }
+            user.setEmail(profileRequest.getEmail());
+        }
+
+        User updatedUser = userRepository.save(user);
+        log.info("User profile updated successfully for user ID: {}", userId);
+        return updatedUser;
+        
     }
 
     @Override
     public void initiatePasswordReset(String email) {
-        return;
+        log.info("Password reset initiated for email: {}", email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        // TODO: Generate reset token and save it with expiration
+        // TODO: Send email with reset link via Kafka event
     }
 
     @Override
     public void resetPassword(String token, String newPassword) {
-        return;
+        log.info("Password reset attempt with token");
+        // TODO: Validate token from DB
+        // TODO: Find user and update password
+        // TODO: Invalidate token
     }
     @Override
     public Long validateToken(String token) {
-        return null;
+        log.info("Validating token");
+        
+        if (token == null || token.isEmpty()) {
+            log.warn("Token is null or empty");
+            throw new InvalidCredentialsException("Invalid or expired token");
+        }
+        
+        if (!jwtTokenProvider.validateToken(token)) {
+            log.warn("Token validation failed");
+            throw new InvalidCredentialsException("Invalid or expired token");
+        }
+        
+        if (jwtTokenProvider.isTokenExpired(token)) {
+            log.warn("Token has expired");
+            throw new InvalidCredentialsException("Invalid or expired token");
+        }
+        
+        Long userId = jwtTokenProvider.getUserIdFromToken(token);
+        if (userId == null) {
+            log.warn("Could not extract user ID from token");
+            throw new InvalidCredentialsException("Invalid or expired token");
+        }
+        
+        log.info("Token validated successfully for user ID: {}", userId);
+        return userId;
     }
 
     private void publishUserRegisteredEvent(User user) {
