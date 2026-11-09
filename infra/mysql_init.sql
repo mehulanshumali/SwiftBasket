@@ -14,6 +14,9 @@ CREATE DATABASE IF NOT EXISTS order_db CHARACTER SET utf8mb4 COLLATE utf8mb4_uni
 -- Payment Service Database
 CREATE DATABASE IF NOT EXISTS payment_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- Notification Service Database
+CREATE DATABASE IF NOT EXISTS notification_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- ============================================================
 -- User Management (restricted to service user only)
 -- ============================================================
@@ -26,6 +29,7 @@ GRANT ALL PRIVILEGES ON user_db.* TO 'swiftbasket_user'@'%';
 GRANT ALL PRIVILEGES ON product_db.* TO 'swiftbasket_user'@'%';
 GRANT ALL PRIVILEGES ON order_db.* TO 'swiftbasket_user'@'%';
 GRANT ALL PRIVILEGES ON payment_db.* TO 'swiftbasket_user'@'%';
+GRANT ALL PRIVILEGES ON notification_db.* TO 'swiftbasket_user'@'%';
 
 -- Apply privileges
 FLUSH PRIVILEGES;

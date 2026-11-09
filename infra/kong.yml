@@ -1,0 +1,190 @@
+# =============================================================================
+# SwiftBasket - Kong Gateway DBless declarative configuration
+# =============================================================================
+# Design: "authenticate at the edge, authorize in the service."
+#   Kong answers ONE question: who is calling? Services decide what they may do.
+#
+#   1. Every request has client-supplied X-User-ID / X-User-Role stripped.
+#   2. Protected routes: if a JWT is present, Kong calls user-service
+#      /validate and injects trusted X-User-ID / X-User-Role upstream.
+#      A session header alone passes through (guest carts); services that
+#      need a real user reject requests without X-User-ID themselves.
+#   3. Public routes (login/register/reset, product GETs, health probes,
+#      Stripe webhook) only get header stripping.
+#   4. Role checks (ADMIN) live in the services, reading X-User-Role.
+# =============================================================================
+
+_format_version: "3.0"
+_transform: true
+
+# ---------------------------------------------------------------------------
+# Global plugins: rate limiting + CORS for the web client
+# ---------------------------------------------------------------------------
+plugins:
+  - name: rate-limiting
+    config:
+      minute: 300
+      policy: local
+  - name: cors
+    config:
+      origins:
+        - "*"
+
+services:
+  # ---------------- user-service (8081) ----------------
+  - name: user-service
+    url: http://host.docker.internal:8081
+    routes:
+      # /auth/me is JWT-protected (longest path wins over the generic route)
+      - name: auth-me-route
+        paths:
+          - /api/v1/auth/me
+        plugins:
+          - &protected_plugin
+            name: pre-function
+            config:
+              access:
+                - &protected |
+                  kong.service.request.clear_header("X-User-ID")
+                  kong.service.request.clear_header("X-User-Role")
+                  local jwt = kong.request.get_header("Authorization")
+                  local session = kong.request.get_header("X-Session-ID")
+                  if not jwt and not session then
+                    return kong.response.exit(401, { message = "Missing Authorization header" })
+                  end
+                  if jwt then
+                    local http = require("resty.http")
+                    local httpc = http.new()
+                    local res, err = httpc:request_uri("http://host.docker.internal:8081/api/v1/auth/validate", {
+                      method = "GET",
+                      headers = { ["Authorization"] = jwt },
+                    })
+                    if not res then
+                      return kong.response.exit(502, { message = "Auth service unavailable" })
+                    end
+                    if res.status ~= 200 then
+                      return kong.response.exit(401, { message = "Invalid or expired token" })
+                    end
+                    local cjson = require("cjson.safe")
+                    local body = cjson.decode(res.body)
+                    if not body or not body.userId then
+                      return kong.response.exit(401, { message = "Invalid token payload" })
+                    end
+                    kong.service.request.set_header("X-User-ID", tostring(body.userId))
+                    kong.service.request.set_header("X-User-Role", body.role or "USER")
+                  end
+      # register / login / password-reset / validate are public
+      - name: auth-route
+        paths:
+          - /api/v1/auth
+        plugins:
+          - &public_plugin
+            name: pre-function
+            config:
+              access:
+                - &public |
+                  kong.service.request.clear_header("X-User-ID")
+                  kong.service.request.clear_header("X-User-Role")
+
+  # ---------------- product-service (8082) ----------------
+  - name: product-service
+    url: http://host.docker.internal:8082
+    routes:
+      # writes require a JWT; admin role is checked by the service
+      - name: product-write-route
+        paths:
+          - /api/v1/products
+        methods:
+          - POST
+          - PUT
+          - PATCH
+          - DELETE
+        plugins:
+          - *protected_plugin
+      - name: product-read-route
+        paths:
+          - /api/v1/products
+        plugins:
+          - *public_plugin
+      - name: category-write-route
+        paths:
+          - /api/v1/categories
+        methods:
+          - POST
+          - PUT
+          - PATCH
+          - DELETE
+        plugins:
+          - *protected_plugin
+      - name: category-read-route
+        paths:
+          - /api/v1/categories
+        plugins:
+          - *public_plugin
+
+  # ---------------- cart-service (8083) ----------------
+  - name: cart-service
+    url: http://host.docker.internal:8083
+    routes:
+      # JWT or guest session; the Lua accepts either
+      - name: cart-route
+        paths:
+          - /api/v1/cart
+        plugins:
+          - *protected_plugin
+      - name: cart-health-route
+        paths:
+          - /api/v1/cart/health
+        plugins:
+          - *public_plugin
+
+  # ---------------- order-service (8084) ----------------
+  - name: order-service
+    url: http://host.docker.internal:8084
+    routes:
+      - name: order-route
+        paths:
+          - /api/v1/orders
+        plugins:
+          - *protected_plugin
+      - name: order-health-route
+        paths:
+          - /api/v1/orders/health
+        plugins:
+          - *public_plugin
+
+  # ---------------- payment-service (8085) ----------------
+  - name: payment-service
+    url: http://host.docker.internal:8085
+    routes:
+      - name: payment-route
+        paths:
+          - /api/v1/payments
+        plugins:
+          - *protected_plugin
+      # Stripe calls this with a signature header, not a JWT
+      - name: payment-webhook-route
+        paths:
+          - /api/v1/payments/webhook
+        plugins:
+          - *public_plugin
+      - name: payment-health-route
+        paths:
+          - /api/v1/payments/health
+        plugins:
+          - *public_plugin
+
+  # ---------------- notification-service (8086) ----------------
+  - name: notification-service
+    url: http://host.docker.internal:8086
+    routes:
+      - name: notification-route
+        paths:
+          - /api/v1/notifications
+        plugins:
+          - *protected_plugin
+      - name: notification-health-route
+        paths:
+          - /api/v1/notifications/health
+        plugins:
+          - *public_plugin

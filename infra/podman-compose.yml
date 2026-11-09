@@ -1,15 +1,50 @@
 version: '3.8'
 
 # Podman Compose compatibility notes:
-# - Podman supports most Docker Compose syntax
-# - Use `podman-compose` instead of `docker-compose`
-# - Networks work differently: containers can reference each other by service name
+# - Use `podman-compose -f infra/podman-compose.yml up -d`
 # - For macOS/Windows with Podman Desktop, ensure Podman machine is running
-# - For rootless Podman, some volume mounts may need permission adjustments
+# - Spring Boot services run on the HOST; containers reach them via host.docker.internal
 
 services:
   # ------------------------------------------------------------
-  # MySQL - Stores User, Product, Order, and Payment data 
+  # Kong - API Gateway (DBless, declarative config in kong.yml)
+  # ------------------------------------------------------------
+  kong:
+    image: docker.io/library/kong:3.9
+    container_name: swiftbasket-kong
+    restart: always
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /kong/kong.yml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_LOG_LEVEL: notice
+      # pre-function auth needs resty.http, which Kong's Lua sandbox blocks
+      # (sandbox is for untrusted code; ours is our own declarative config)
+      KONG_UNTRUSTED_LUA: "on"
+    volumes:
+      - ./kong.yml:/kong/kong.yml:ro
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    extra_hosts:
+      # Alias the Docker name to Podman's host gateway. podman-compose 1.5
+      # cannot resolve "host-gateway", so the static gateway IP is used
+      # (192.168.127.254 = host.containers.internal on the podman machine).
+      - "host.docker.internal:192.168.127.254"
+    networks:
+      - swiftbasket-net
+    healthcheck:
+      test: ["CMD-SHELL", "kong health"]
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # ------------------------------------------------------------
+  # MySQL - Stores all 5 service databases
   # ------------------------------------------------------------
   mysqldb:
     image: docker.io/library/mysql:8.0
@@ -23,8 +58,9 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      # Mounts the init script to create all 4 DBs automatically
-      - ./mysql-init:/docker-entrypoint-initdb.d:Z
+      # Mount the init file directly (the old ./mysql-init dir was empty,
+      # so databases were never created)
+      - ./mysql_init.sql:/docker-entrypoint-initdb.d/mysql_init.sql:Z
     networks:
       - swiftbasket-net
     healthcheck:
@@ -34,10 +70,10 @@ services:
       start_period: 40s
 
   # ------------------------------------------------------------
-  # MongoDB - Stores Cart data (Flexible Schema) 
+  # MongoDB - Stores Cart data (Flexible Schema)
   # ------------------------------------------------------------
   mongodb:
-    image: docker.io/library/mongo:latest
+    image: docker.io/library/mongo:7.0
     container_name: swiftbasket-mongo
     restart: always
     ports:
@@ -53,7 +89,7 @@ services:
       start_period: 40s
 
   # ------------------------------------------------------------
-  # Redis - Caching for Cart Service 
+  # Redis - Caching for Cart Service
   # ------------------------------------------------------------
   redis:
     image: docker.io/library/redis:alpine
@@ -73,13 +109,19 @@ services:
   # Zookeeper - Required for Kafka
   # ------------------------------------------------------------
   zookeeper:
-    image: docker.io/confluentinc/cp-zookeeper:latest
+    image: docker.io/confluentinc/cp-zookeeper:7.5.0
     container_name: swiftbasket-zookeeper
+    restart: always
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    volumes:
+      # ZooKeeper stores the Kafka cluster ID — it must persist alongside
+      # kafka_data or the broker sees InconsistentClusterIdException on restart
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_log:/var/lib/zookeeper/log
     networks:
       - swiftbasket-net
     healthcheck:
@@ -89,11 +131,12 @@ services:
       start_period: 30s
 
   # ------------------------------------------------------------
-  # Kafka - Message Broker 
+  # Kafka - Message Broker
   # ------------------------------------------------------------
   kafka:
     image: docker.io/confluentinc/cp-kafka:7.5.0
     container_name: swiftbasket-kafka
+    restart: always
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -107,23 +150,27 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - kafka_data:/var/lib/kafka/data
     networks:
       - swiftbasket-net
     healthcheck:
-      test: ["CMD", "kafka-broker-api-versions.sh", "--bootstrap-server=localhost:9092"]
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server=localhost:9092"]
       timeout: 10s
       retries: 5
       start_period: 30s
 
   # ------------------------------------------------------------
-  # Elasticsearch - For Product Search 
+  # Elasticsearch 8.x - For Product Search (single node, security off)
   # ------------------------------------------------------------
   elasticsearch:
-    image: docker.io/elastic/elasticsearch:7.17.10
+    image: docker.io/library/elasticsearch:8.14.3
     container_name: swiftbasket-elastic
+    restart: always
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
@@ -144,6 +191,12 @@ volumes:
   mysql_data:
     driver: local
   mongo_data:
+    driver: local
+  kafka_data:
+    driver: local
+  zookeeper_data:
+    driver: local
+  zookeeper_log:
     driver: local
   es_data:
     driver: local
