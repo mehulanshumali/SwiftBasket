@@ -28,6 +28,9 @@ public class UserProfileResponse {
     
     @Schema(description = "User's address", example = "123 Main St, City, State 12345")
     private String address;
+
+    @Schema(description = "User's role", example = "USER")
+    private String role;
     
     @Schema(description = "Account creation timestamp", example = "2025-12-14T10:30:00")
     private LocalDateTime createdAt;

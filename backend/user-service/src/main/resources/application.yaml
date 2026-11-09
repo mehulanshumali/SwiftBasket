@@ -20,17 +20,9 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
-# Eureka Client Configuration
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
-
 # JWT Configuration
 jwt:
-  secret: your-secret-key-min-32-characters-long-please-change-this-in-production
+  secret: ${JWT_SECRET:dev-only-secret-key-change-me-this-must-be-at-least-64-bytes-long-ok!!}
   expiration: 86400000  # 24 hours in milliseconds
 
 # Kafka Topics

@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import com.SwiftBasket.user_service.dto.LoginRequest;
 import com.SwiftBasket.user_service.dto.LoginResponse;
 import com.SwiftBasket.user_service.dto.RegisterRequest;
+import com.SwiftBasket.user_service.dto.TokenValidationResponse;
 import com.SwiftBasket.user_service.dto.UserProfileResponse;
 import com.SwiftBasket.user_service.entity.PasswordResetToken;
+import com.SwiftBasket.user_service.entity.Role;
 import com.SwiftBasket.user_service.entity.User;
 import com.SwiftBasket.user_service.event.UserRegisteredEvent;
 import com.SwiftBasket.user_service.exception.InvalidCredentialsException;
@@ -65,6 +67,7 @@ public class UserServiceImpl implements UserService {
                 .email(request.getEmail())
                 .passwordHash(hashedPassword)
                 .fullName(request.getFullName())
+                .role(Role.USER)
                 .build();
 
         User savedUser = userRepository.save(user);
@@ -79,18 +82,15 @@ public class UserServiceImpl implements UserService {
     public LoginResponse login(LoginRequest request) {
         log.info("User login attempt with email: {}", request.getEmail());
 
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> {
-                    log.warn("User not found with email: {}", request.getEmail());
-                    return new InvalidCredentialsException("Invalid email or password");
-                });
+        User user = userRepository.findByEmailAndDeletedAtIsNull(request.getEmail())
+        .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             log.warn("Invalid password for email: {}", request.getEmail());
             throw new InvalidCredentialsException("Invalid email or password"); 
         }
 
-        String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
+        String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail(), user.getRole());
         long expirationTimeInMs = jwtTokenProvider.getExpirationTimeInMs();
 
         log.info("User logged in successfully: {}", user.getEmail());
@@ -148,9 +148,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void initiatePasswordReset(String email) {
-        log.info("Password reset initiated for email: {}", email);
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        log.info("Password reset requested");
+
+        User user = userRepository.findByEmailAndDeletedAtIsNull(email).orElse(null);
+
+        if (user == null) {
+            log.info("Password reset request completed");
+            return;
+        }
+
         String resetToken = PasswordResetToken.generateToken();
         LocalDateTime expiryDate = LocalDateTime.now().plusHours(PASSWORD_RESET_TOKEN_EXPIRATION_HOURS);
         passwordResetTokenRepository.deleteByUserIdAndIsUsedTrue(user.getId());
@@ -168,7 +174,7 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             log.error("Failed to send password reset email: {}", e.getMessage());
         }
-}
+    }
 
     @Override
     public void resetPassword(String token, String newPassword) {
@@ -193,7 +199,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long validateToken(String token) {
+    public TokenValidationResponse validateToken(String token) {
         log.info("Validating token");
 
         if (token == null || token.isEmpty()) {
@@ -218,7 +224,31 @@ public class UserServiceImpl implements UserService {
         }
         
         log.info("Token validated successfully for user ID: {}", userId);
-        return userId;
+        return TokenValidationResponse.builder()
+            .userId(userId)
+            .email(jwtTokenProvider.getEmailFromToken(token))
+            .role(jwtTokenProvider.getRoleFromToken(token))
+            .build();
+    }
+
+    @Override
+    public void deleteAccount(Long userId) {
+        log.info("Soft-deleting account for user ID: {}", userId);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.warn("Account deletion failed - user not found with ID: {}", userId);
+                    return new UserNotFoundException("User not found");
+                });
+
+        if (user.getDeletedAt() != null) {
+            log.info("Account for user ID {} already soft-deleted at {}", userId, user.getDeletedAt());
+            return;   // double-delete is a no-op, stays idempotent
+        }
+
+        user.setDeletedAt(LocalDateTime.now());
+        userRepository.save(user);
+        log.info("Account soft-deleted successfully for user ID: {}", userId);
     }
 
     private void publishUserRegisteredEvent(User user) {

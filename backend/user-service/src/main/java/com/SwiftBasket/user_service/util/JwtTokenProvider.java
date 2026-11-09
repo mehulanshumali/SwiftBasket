@@ -7,6 +7,8 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.SwiftBasket.user_service.entity.Role;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -54,7 +56,7 @@ public class JwtTokenProvider {
         }
     }
 
-    public String generateToken(Long userId, String email) {
+    public String generateToken(Long userId, String email, Role role) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
         log.debug("Generating token for user ID: {} with expiration: {}", userId, jwtExpirationInMs + "ms");
@@ -62,6 +64,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .subject(userId.toString())
                 .claim("email", email)
+                .claim("role", role.name())
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(getSecretKey(), SIG.HS512)
@@ -94,6 +97,15 @@ public class JwtTokenProvider {
             return null;
         }
         return claims.get("email", String.class);
+    }
+
+    public String getRoleFromToken(String token) {
+        Claims claims = extractClaims(token);
+        if (claims == null) {
+            log.warn("Cannot extract role from token - claims extraction failed");
+            return null;
+        }
+        return claims.get("role", String.class);
     }
 
     public boolean validateToken(String token) {
