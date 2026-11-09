@@ -22,8 +22,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
 @Table(name = "products")
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,7 +41,7 @@ public class Product {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", length = 500)
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.EAGER)

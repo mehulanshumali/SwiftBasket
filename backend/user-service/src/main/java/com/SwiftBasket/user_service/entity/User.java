@@ -35,13 +35,13 @@ public class User {
     @Column(nullable = false)
     private String passwordHash;
 
-    @Column(name="full_name", nullable = false)
+    @Column(name="full_name", nullable = false, length = 100)
     private String fullName;
 
-    @Column(name="phone_number")
+    @Column(name="phone_number", length = 20)
     private String phoneNumber;
 
-    @Column(name="address")
+    @Column(name="address", length = 500)
     private String address;
 
     @Enumerated(EnumType.STRING)
