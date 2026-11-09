@@ -2,6 +2,7 @@ package com.SwiftBasket.user_service.event;
 
 import java.time.LocalDateTime;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,9 +12,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(name = "UserRegisteredEvent", description = "Kafka event published after successful registration; triggers the welcome email")
 public class UserRegisteredEvent {
+
+    @Schema(description = "New user's ID - also the Kafka message key")
     private Long userId;
+
+    @Schema(description = "Registered email (PII exception: emitted once by the source of truth)")
     private String email;
+
+    @Schema(description = "Display name for the welcome email greeting")
     private String fullName;
+
+    @Schema(description = "Registration timestamp")
     private LocalDateTime registeredAt;
 }

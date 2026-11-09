@@ -241,7 +241,11 @@ public class CartServiceImpl implements CartService {
                                 .unitPrice(item.getUnitPrice())
                                 .addedAt(LocalDateTime.now())
                                 .build();
-                        kafkaTemplate.send(cartItemAddedTopic, event);
+                        // guest carts have no userId - key by sessionId so the event still publishes
+                        String messageKey = cart.getUserId() != null
+                                ? cart.getUserId().toString()
+                                : cart.getSessionId();
+                        kafkaTemplate.send(cartItemAddedTopic, messageKey, event);
                         log.info("Published cart.item.added event - cartId: {}, productId: {}",
                                 cart.getId(), item.getProductId());
                     });
