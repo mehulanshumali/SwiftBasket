@@ -16,7 +16,7 @@ public class ProductClient {
 
     private final RestClient restClient;
 
-    public ProductClient(@Value("${product.service.url:http://localhost:8082}") String baseUrl) {
+    public ProductClient(@Value("${product.service.url}") String baseUrl) {
         this.restClient = RestClient.builder().baseUrl(baseUrl).build();
     }
 

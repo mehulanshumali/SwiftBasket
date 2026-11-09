@@ -22,3 +22,8 @@ spring:
 
 kafka_topic:
   name: cart.item.added
+
+# Internal service URLs (direct, not via Kong)
+product:
+  service:
+    url: http://localhost:8082
