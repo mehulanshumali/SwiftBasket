@@ -4,6 +4,7 @@ package com.SwiftBasket.user_service.mapper;
 import org.springframework.stereotype.Component;
 
 import com.SwiftBasket.user_service.dto.RegisterRequest;
+import com.SwiftBasket.user_service.dto.UserEmailResponse;
 import com.SwiftBasket.user_service.dto.UserProfileResponse;
 import com.SwiftBasket.user_service.entity.User;
 
@@ -20,6 +21,13 @@ public class UserMapper {
                 .role(user.getRole().name())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
+                .build();
+    }
+
+    public UserEmailResponse toEmailResponse(User user) {
+        return UserEmailResponse.builder()
+                .userId(user.getId())
+                .email(user.getEmail())
                 .build();
     }
 
