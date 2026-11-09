@@ -1,26 +1,46 @@
 server:
-  port: 8084
+  port: 8084 # Unique port for Order Service
 
 spring:
   application:
     name: order-service
+
+  # Primary Database (MySQL)
   datasource:
-    url: jdbc:mysql://localhost:3306/order_db?useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3307/order_db?useSSL=false&allowPublicKeyRetrieval=true
     username: swiftbasket_user
     password: securepass
-  
-  # Kafka Consumer Config (To listen for payment events)
+  jpa:
+    hibernate:
+      ddl-auto: validate # schema is owned by infra/mysql_init.sql - never auto-managed
+
+  # Kafka Config
   kafka:
     bootstrap-servers: localhost:9092
+    # CONSUMER: Listens for payment events (order-group)
     consumer:
       group-id: order-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "*" # Allow deserializing all packages
+        spring.json.trusted.packages: "*"
+    # PRODUCER: Publishes order.placed and order.status.updated
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
+# Internal service URLs (direct, not via Kong)
+cart:
+  service:
+    url: http://localhost:8083
+
+product:
+  service:
+    url: http://localhost:8082
+
+kafka_topic:
+  order_placed: order.placed
+  order_status_updated: order.status.updated
+  payment_completed: payment.completed
+  payment_failed: payment.failed
