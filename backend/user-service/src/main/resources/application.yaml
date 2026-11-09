@@ -12,7 +12,17 @@ spring:
     hibernate:
       ddl-auto: validate # schema is owned by infra/mysql_init.sql - never auto-managed
     show-sql: true
-  
+
+  # Mail Server (Mailtrap - development SMTP; real creds via env vars)
+  mail:
+    host: smtp.mailtrap.io
+    port: 2525
+    username: ${MAILTRAP_USERNAME:mailtrap_dummy}
+    password: ${MAILTRAP_PASSWORD:mailtrap_dummy}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
   # Kafka Configuration
   kafka:
     bootstrap-servers: localhost:9092
@@ -28,12 +38,6 @@ jwt:
 # Kafka Topics
 kafka_topic:
   name: user.registered
-
-# SendGrid Configuration
-sendgrid:
-  api-key: ${SENDGRID_API_KEY}  # Uses environment variable
-  from-email: victorfienkel0@gmail.com
-  from-name: SwiftBasket Support
 
 app:
   base-url: http://localhost:8081

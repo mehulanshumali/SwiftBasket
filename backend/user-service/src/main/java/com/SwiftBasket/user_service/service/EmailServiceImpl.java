@@ -1,86 +1,59 @@
 package com.SwiftBasket.user_service.service;
 
-import java.io.IOException;
-
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.sendgrid.Request;
-import com.sendgrid.Response;
-import com.sendgrid.SendGrid;
-import com.sendgrid.helpers.mail.Mail;
-import com.sendgrid.helpers.mail.objects.Content;
-import com.sendgrid.helpers.mail.objects.Email;
-import com.sendgrid.helpers.mail.objects.Personalization;
+import com.SwiftBasket.user_service.exception.EmailSendException;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Sends transactional emails via Mailtrap SMTP (development inbox). The
+ * EmailService interface keeps this swappable for a production provider
+ * (SES/SendGrid) without touching callers.
+ */
 @Service
 @Slf4j
 public class EmailServiceImpl implements EmailService {
 
-    @Value("${sendgrid.api-key}")
-    private String sendGridApiKey;
-
-    @Value("${sendgrid.from-email}")
-    private String fromEmail;
-
-    @Value("${sendgrid.from-name}")
-    private String fromName;
-
-    @Value("${app.base-url}")
-    private String appBaseUrl;
+    @Autowired
+    private JavaMailSender mailSender;
 
     @Override
     public void sendPasswordResetEmail(String email, String fullName, String resetToken) {
-        try {
-            String resetLink = appBaseUrl + "/reset-password?token=" + resetToken;
-            String htmlContent = buildPasswordResetEmailTemplate(fullName, resetLink);
-            sendEmail(email, "Reset Your SwiftBasket Account Password", htmlContent);
-            log.info("Password reset email sent to: {}", email);
-        } catch (IOException e) {
-            log.error("Failed to send password reset email to {}: {}", email, e.getMessage());
-            throw new RuntimeException("Failed to send password reset email", e);
-
-        }
+        String resetLink = "http://localhost:8081" + "/reset-password?token=" + resetToken;
+        String htmlContent = buildPasswordResetEmailTemplate(fullName, resetLink);
+        sendEmail(email, "Reset Your SwiftBasket Account Password", htmlContent);
+        log.info("Password reset email sent to: {}", email);
     }
 
     @Override
     public void sendRegistrationConfirmationEmail(String email, String fullName) {
-        try {
-            String htmlContent = buildRegistrationEmailTemplate(fullName);
-            sendEmail(email, "Welcome to SwiftBasket", htmlContent);
-            log.info("Registration confirmation email sent to: {}", email);
-        } catch (IOException e) {
-            log.error("Failed to send registration confirmation email to {}: {}", email, e.getMessage());
-            throw new RuntimeException("Failed to send registration confirmation email", e);
-        }
+        String htmlContent = buildRegistrationEmailTemplate(fullName);
+        sendEmail(email, "Welcome to SwiftBasket", htmlContent);
+        log.info("Registration confirmation email sent to: {}", email);
     }
 
-    private void sendEmail(String email, String subject, String htmlContent) throws IOException {
-        Mail mail = new Mail();
-        mail.setFrom(new Email(fromEmail, fromName));
-        
-        Personalization personalization = new Personalization();
-        personalization.addTo(new Email(email));
-        personalization.setSubject(subject);
-        mail.addPersonalization(personalization);
-        mail.addContent(new Content("text/html", htmlContent));
-        
-        SendGrid sendGrid = new SendGrid(sendGridApiKey);
-        Request request = new Request();
-        request.setMethod(com.sendgrid.Method.POST);
-        request.setEndpoint("mail/send");
-        request.setBody(mail.build());
-        
-        Response response = sendGrid.api(request);
-        
-        int responseStatusCode = response.getStatusCode();
-        if (responseStatusCode >= 200 && responseStatusCode < 300) {
-            log.info("Email sent successfully to: {}", email);
-        } else {
-            log.error("Failed to send email to: {}. Status Code: {}, Body: {}", email, responseStatusCode, response.getBody());
-            throw new RuntimeException("Failed to send email");
+    private void sendEmail(String to, String subject, String htmlContent) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
+            helper.setFrom("no-reply@swiftbasket.com");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true);
+            mailSender.send(message);
+            log.info("Email sent successfully to: {}", to);
+        } catch (MessagingException e) {
+            log.error("Failed to build email to {}: {}", to, e.getMessage());
+            throw new EmailSendException("Failed to build email");
+        } catch (Exception e) {
+            log.error("Failed to send email to {}: {}", to, e.getMessage());
+            throw new EmailSendException("Failed to send email");
         }
     }
 
@@ -109,11 +82,11 @@ public class EmailServiceImpl implements EmailService {
                 "            <a href='" + resetLink + "' class='btn'>Reset Password</a>" +
                 "            <p>Or copy and paste this link in your browser:</p>" +
                 "            <p>" + resetLink + "</p>" +
-                "            <p class='warning'>⚠️ This link will expire in 1 hour.</p>" +
+                "            <p class='warning'>This link will expire in 1 hour.</p>" +
                 "            <p>If you didn't request a password reset, please ignore this email. Your account is still secure.</p>" +
                 "        </div>" +
                 "        <div class='footer'>" +
-                "            <p>&copy; 2024 SwiftBasket. All rights reserved.</p>" +
+                "            <p>SwiftBasket. All rights reserved.</p>" +
                 "        </div>" +
                 "    </div>" +
                 "</body>" +
@@ -150,11 +123,10 @@ public class EmailServiceImpl implements EmailService {
                 "            <p>If you have any questions, feel free to contact our support team.</p>" +
                 "        </div>" +
                 "        <div class='footer'>" +
-                "            <p>&copy; 2024 SwiftBasket. All rights reserved.</p>" +
+                "            <p>SwiftBasket. All rights reserved.</p>" +
                 "        </div>" +
                 "    </div>" +
                 "</body>" +
                 "</html>";
     }
-
 }
