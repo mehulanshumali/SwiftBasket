@@ -16,10 +16,10 @@ import lombok.NoArgsConstructor;
 public class LoginRequest {
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
-    @Schema(description = "User's email address", example = "user@example.com")
+    @Schema(description = "User's email address")
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Schema(description = "User's password", example = "SecurePass123")
+    @Schema(description = "User's password")
     private String password;
 }

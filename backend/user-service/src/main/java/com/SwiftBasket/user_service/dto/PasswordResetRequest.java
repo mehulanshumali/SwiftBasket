@@ -16,6 +16,6 @@ import lombok.NoArgsConstructor;
 public class PasswordResetRequest {
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
-    @Schema(description = "Email address for password reset", example = "user@example.com")
+    @Schema(description = "Email address for password reset")
     private String email;
 }

@@ -2,6 +2,7 @@ package com.SwiftBasket.product_service.dto.response;
 
 import java.math.BigDecimal;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,14 +12,27 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(name = "ProductSearchResponse", description = "Product search result from Elasticsearch")
 public class ProductSearchResponse {
-    
-    private String id;
-    private String name;
-    private String description;
-    private BigDecimal price;
-    private String categoryName;
-    private String imageUrl;
-    private boolean active;
 
+    @Schema(description = "Product's unique ID")
+    private String id;
+
+    @Schema(description = "Product name")
+    private String name;
+
+    @Schema(description = "Product description")
+    private String description;
+
+    @Schema(description = "Product price")
+    private BigDecimal price;
+
+    @Schema(description = "Category name")
+    private String categoryName;
+
+    @Schema(description = "Product image URL")
+    private String imageUrl;
+
+    @Schema(description = "Whether the product is active in the catalog")
+    private boolean active;
 }

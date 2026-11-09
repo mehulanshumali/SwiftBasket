@@ -17,15 +17,15 @@ import lombok.NoArgsConstructor;
 public class RegisterRequest {
     @NotBlank(message="Email is required")
     @Email(message="Email should be valid")
-    @Schema(description = "User's email address", example = "user@example.com")
+    @Schema(description = "User's email address")
     private String email;
     
     @NotBlank(message="Password is required")
     @Size(min=8, message="Password must be at least 8 characters long")
-    @Schema(description = "User's password (minimum 8 characters)", example = "SecurePass123")
+    @Schema(description = "User's password (minimum 8 characters)")
     private String password;
 
     @NotBlank(message="Full name is required")
-    @Schema(description = "User's full name", example = "John Doe")
+    @Schema(description = "User's full name")
     private String fullName;
 }

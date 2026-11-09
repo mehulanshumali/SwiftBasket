@@ -15,11 +15,11 @@ import lombok.NoArgsConstructor;
 @Schema(name = "ResetPasswordRequest", description = "Password reset completion request")
 public class ResetPasswordRequest {
     @NotBlank(message = "Token is required")
-    @Schema(description = "Reset token received in email", example = "reset-token-xxx-yyy-zzz")
+    @Schema(description = "Reset token received in email")
     private String token;
 
     @NotBlank(message = "New password is required")
     @Size(min = 8, message = "Password should be at least 8 characters")
-    @Schema(description = "New password (minimum 8 characters)", example = "NewSecurePass456")
+    @Schema(description = "New password (minimum 8 characters)")
     private String newPassword;
 }

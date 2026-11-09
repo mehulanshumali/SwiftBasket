@@ -14,27 +14,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema(name = "UserProfileResponse", description = "User profile information")
 public class UserProfileResponse {
-    @Schema(description = "User's unique ID", example = "1")
+    @Schema(description = "User's unique ID")
     private Long userId;
     
-    @Schema(description = "User's email address", example = "user@example.com")
+    @Schema(description = "User's email address")
     private String email;
     
-    @Schema(description = "User's full name", example = "John Doe")
+    @Schema(description = "User's full name")
     private String fullName;
     
-    @Schema(description = "User's phone number", example = "+1234567890")
+    @Schema(description = "User's phone number")
     private String phoneNumber;
     
-    @Schema(description = "User's address", example = "123 Main St, City, State 12345")
+    @Schema(description = "User's address")
     private String address;
 
-    @Schema(description = "User's role", example = "USER")
+    @Schema(description = "User's role")
     private String role;
     
-    @Schema(description = "Account creation timestamp", example = "2025-12-14T10:30:00")
+    @Schema(description = "Account creation timestamp")
     private LocalDateTime createdAt;
     
-    @Schema(description = "Last profile update timestamp", example = "2025-12-14T10:30:00")
+    @Schema(description = "Last profile update timestamp")
     private LocalDateTime updatedAt;
 }

@@ -2,6 +2,7 @@ package com.SwiftBasket.product_service.dto.response;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +12,24 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(name = "PagedResponse", description = "Paginated list of results")
 public class PagedResponse<T> {
-    private List<T> content;      // The actual list of Products/Categories
-    private int pageNumber;       // Current page (e.g., 0)
-    private int pageSize;         // Items per page (e.g., 20)
-    private long totalElements;   // Total items in DB (e.g., 500)
-    private int totalPages;       // Total pages calculated (e.g., 25)
-    private boolean last;         // Is this the last page?
+
+    @Schema(description = "The actual list of results on this page")
+    private List<T> content;
+
+    @Schema(description = "Current page number (0-based)")
+    private int pageNumber;
+
+    @Schema(description = "Number of items per page")
+    private int pageSize;
+
+    @Schema(description = "Total items across all pages")
+    private long totalElements;
+
+    @Schema(description = "Total number of pages")
+    private int totalPages;
+
+    @Schema(description = "Whether this is the last page")
+    private boolean last;
 }
