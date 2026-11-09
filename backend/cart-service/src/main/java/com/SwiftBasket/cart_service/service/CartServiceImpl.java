@@ -30,6 +30,9 @@ public class CartServiceImpl implements CartService {
     private ProductClient productClient;
 
     @Autowired
+    private CartCacheService cacheService;
+
+    @Autowired
     private KafkaTemplate<String, CartItemAddedEvent> kafkaTemplate;
 
     @Value("${kafka_topic.name}")
@@ -39,8 +42,20 @@ public class CartServiceImpl implements CartService {
     public Cart getCart(Long userId, String sessionId) {
         log.info("Fetching cart - userId: {}, sessionId: {}", userId, sessionId);
 
+        // cache-aside read: try Redis first, fall back to Mongo, then warm the cache
+        Optional<Cart> cached = cacheService.get(userId, sessionId);
+        if (cached.isPresent()) {
+            return cached.get();
+        }
+
         Optional<Cart> cart = findCart(userId, sessionId);
         Cart result = cart.orElseGet(() -> buildEmptyCart(userId, sessionId));
+
+        // only cache carts that actually exist in Mongo - never the empty shell
+        // (a cached shell would mask a real cart created moments later)
+        if (result.getId() != null) {
+            cacheService.put(result);
+        }
 
         log.info("Cart fetched - cartId: {}, itemCount: {}",
                 result.getId(), result.getItems().size());
@@ -85,6 +100,7 @@ public class CartServiceImpl implements CartService {
                 savedCart.getId(), savedCart.getItems().size(), savedCart.getTotalPrice(),
                 isNewCart ? " (new cart created)" : "");
 
+        cacheService.evict(userId, sessionId);
         publishCartItemAddedEvent(savedCart, request.getProductId());
         return savedCart;
     }
@@ -114,6 +130,7 @@ public class CartServiceImpl implements CartService {
 
         Cart savedCart = cartRepository.save(cart);
         log.info("Cart saved - cartId: {}, items: {}", savedCart.getId(), savedCart.getItems().size());
+        cacheService.evict(userId, sessionId);
         return savedCart;
     }
 
@@ -136,6 +153,7 @@ public class CartServiceImpl implements CartService {
         Cart savedCart = cartRepository.save(cart);
         log.info("Product {} removed - cartId: {}, items: {}",
                 productId, savedCart.getId(), savedCart.getItems().size());
+        cacheService.evict(userId, sessionId);
         return savedCart;
     }
 
@@ -155,6 +173,7 @@ public class CartServiceImpl implements CartService {
 
         cartRepository.save(cart);
         log.info("Cart cleared - shell kept, cartId: {}", cart.getId());
+        cacheService.evict(userId, sessionId);
     }
 
     @Override
@@ -178,6 +197,10 @@ public class CartServiceImpl implements CartService {
             Cart savedCart = cartRepository.save(guestCart);
             log.info("Guest cart adopted as user cart - cartId: {}, items: {}",
                     savedCart.getId(), savedCart.getItems().size());
+
+            // guest key (cart re-homed) and user key (cart now exists) both stale
+            cacheService.evict(null, sessionId);
+            cacheService.evict(userId, null);
             return savedCart;
         }
 
@@ -196,6 +219,10 @@ public class CartServiceImpl implements CartService {
         cartRepository.delete(guestCart);
         log.info("Guest cart merged and deleted - cartId: {}, items: {}, total: {}",
                 savedCart.getId(), savedCart.getItems().size(), savedCart.getTotalPrice());
+
+        // user cart changed AND guest cart is gone - both keys must go
+        cacheService.evict(userId, null);
+        cacheService.evict(null, sessionId);
         return savedCart;
     }
 
