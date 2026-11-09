@@ -1,5 +1,7 @@
 package com.SwiftBasket.order_service.dto;
 
+import java.math.BigDecimal;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +22,7 @@ public class OrderItemResponse {
     private String productName;
 
     @Schema(description = "Unit price captured at purchase time")
-    private java.math.BigDecimal unitPrice;
+    private BigDecimal unitPrice;
 
     @Schema(description = "Quantity ordered")
     private int quantity;
