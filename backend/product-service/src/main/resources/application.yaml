@@ -12,7 +12,7 @@ spring:
     password: securepass
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate # schema is owned by infra/mysql_init.sql - never auto-managed
 
   # Search Engine (Elasticsearch)
   elasticsearch:

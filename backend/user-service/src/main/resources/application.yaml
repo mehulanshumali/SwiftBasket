@@ -10,7 +10,7 @@ spring:
     password: securepass
   jpa:
     hibernate:
-      ddl-auto: update # Automatically creates tables based on @Entity classes
+      ddl-auto: validate # schema is owned by infra/mysql_init.sql - never auto-managed
     show-sql: true
   
   # Kafka Configuration
