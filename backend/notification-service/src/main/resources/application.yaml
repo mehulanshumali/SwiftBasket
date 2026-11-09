@@ -1,21 +1,30 @@
 server:
-  port: 8086
+  port: 8086 # Unique port for Notification Service
 
 spring:
   application:
     name: notification-service
-  
-  # Mail Server Config (Using Mailtrap or local SMTP for testing)
+
+  # Primary Database (MySQL)
+  datasource:
+    url: jdbc:mysql://localhost:3307/notification_db?useSSL=false&allowPublicKeyRetrieval=true
+    username: swiftbasket_user
+    password: securepass
+  jpa:
+    hibernate:
+      ddl-auto: validate # schema is owned by infra/mysql_init.sql - never auto-managed
+
+  # Mail Server (Mailtrap - development SMTP; real creds via env vars)
   mail:
     host: smtp.mailtrap.io
     port: 2525
-    username: <your-mailtrap-username>ß
-    password: <your-mailtrap-password>
+    username: ${MAILTRAP_USERNAME:mailtrap_dummy}
+    password: ${MAILTRAP_PASSWORD:mailtrap_dummy}
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
 
-  # Kafka Consumer (Listens to MULTIPLE topics)
+  # Kafka Consumer (listens to ALL notification topics)
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
@@ -26,7 +35,15 @@ spring:
       properties:
         spring.json.trusted.packages: "*"
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
+# Internal service URLs (direct, not via Kong) + email resolution cache TTL (claim-check)
+user:
+  service:
+    url: http://localhost:8081
+  cache:
+    ttl-minutes: 15
+
+kafka_topic:
+  user_registered: user.registered
+  order_placed: order.placed
+  payment_completed: payment.completed
+  order_status_updated: order.status.updated
