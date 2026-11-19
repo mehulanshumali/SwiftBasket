@@ -28,6 +28,9 @@ public class ProductResponse {
     @Schema(description = "Product price")
     private BigDecimal price;
 
+    @Schema(description = "ISO currency code for the product price")
+    private String currency;
+
     @Schema(description = "Quantity in stock")
     private Integer stockQuantity;
 

@@ -1,7 +1,6 @@
 package com.SwiftBasket.product_service.mapper;
 
-import java.math.BigDecimal;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.SwiftBasket.product_service.document.ProductDocument;
@@ -14,12 +13,19 @@ import com.SwiftBasket.product_service.entity.Product;
 @Component
 public class ProductMapper {
 
+    private final String currency;
+
+    public ProductMapper(@Value("${swiftbasket.currency:INR}") String currency) {
+        this.currency = currency;
+    }
+
     public ProductResponse toResponse(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())
+                .currency(currency)
                 .stockQuantity(product.getStockQuantity())
                 .categoryName(product.getCategory().getName())
                 .categoryId(product.getCategory().getId())
@@ -48,6 +54,7 @@ public class ProductMapper {
                 .name(document.getName())
                 .description(document.getDescription())
                 .price(document.getPrice())
+                .currency(currency)
                 .categoryName(document.getCategoryName())
                 .imageUrl(document.getImageUrl())
                 .build();

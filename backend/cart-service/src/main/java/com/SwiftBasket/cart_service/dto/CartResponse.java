@@ -24,4 +24,7 @@ public class CartResponse {
 
     @Schema(description = "Total price of all items in the cart")
     private BigDecimal totalPrice;
+
+    @Schema(description = "ISO currency code for cart prices")
+    private String currency;
 }

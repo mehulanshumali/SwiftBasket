@@ -27,6 +27,9 @@ public class ProductSearchResponse {
     @Schema(description = "Product price")
     private BigDecimal price;
 
+    @Schema(description = "ISO currency code for the product price")
+    private String currency;
+
     @Schema(description = "Category name")
     private String categoryName;
 
