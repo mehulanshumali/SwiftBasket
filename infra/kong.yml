@@ -39,6 +39,7 @@ services:
       - name: auth-me-route
         paths:
           - /api/v1/auth/me
+        strip_path: false
         plugins:
           - &protected_plugin
             name: pre-function
@@ -77,6 +78,7 @@ services:
       - name: auth-route
         paths:
           - /api/v1/auth
+        strip_path: false
         plugins:
           - &public_plugin
             name: pre-function
@@ -94,6 +96,7 @@ services:
       - name: product-write-route
         paths:
           - /api/v1/products
+        strip_path: false
         methods:
           - POST
           - PUT
@@ -104,11 +107,13 @@ services:
       - name: product-read-route
         paths:
           - /api/v1/products
+        strip_path: false
         plugins:
           - *public_plugin
       - name: category-write-route
         paths:
           - /api/v1/categories
+        strip_path: false
         methods:
           - POST
           - PUT
@@ -119,6 +124,7 @@ services:
       - name: category-read-route
         paths:
           - /api/v1/categories
+        strip_path: false
         plugins:
           - *public_plugin
 
@@ -130,11 +136,13 @@ services:
       - name: cart-route
         paths:
           - /api/v1/cart
+        strip_path: false
         plugins:
           - *protected_plugin
       - name: cart-health-route
         paths:
           - /api/v1/cart/health
+        strip_path: false
         plugins:
           - *public_plugin
 
@@ -145,11 +153,13 @@ services:
       - name: order-route
         paths:
           - /api/v1/orders
+        strip_path: false
         plugins:
           - *protected_plugin
       - name: order-health-route
         paths:
           - /api/v1/orders/health
+        strip_path: false
         plugins:
           - *public_plugin
 
@@ -160,17 +170,20 @@ services:
       - name: payment-route
         paths:
           - /api/v1/payments
+        strip_path: false
         plugins:
           - *protected_plugin
       # Stripe calls this with a signature header, not a JWT
       - name: payment-webhook-route
         paths:
           - /api/v1/payments/webhook
+        strip_path: false
         plugins:
           - *public_plugin
       - name: payment-health-route
         paths:
           - /api/v1/payments/health
+        strip_path: false
         plugins:
           - *public_plugin
 
@@ -181,10 +194,12 @@ services:
       - name: notification-route
         paths:
           - /api/v1/notifications
+        strip_path: false
         plugins:
           - *protected_plugin
       - name: notification-health-route
         paths:
           - /api/v1/notifications/health
+        strip_path: false
         plugins:
           - *public_plugin
