@@ -42,6 +42,9 @@ public class WebSecurityConfig {
                 .requestMatchers("/api/v1/auth/validate").permitAll()
                 .requestMatchers("/api/v1/auth/me").permitAll()
                 .requestMatchers("/api/v1/auth/health").permitAll()
+                // Internal claim-check endpoint - called directly by notification-service
+                // on the private network; never routed through Kong
+                .requestMatchers("/api/v1/users/*/email").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers("/swagger-ui.html").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
@@ -60,7 +63,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173", "http://localhost:8080"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
