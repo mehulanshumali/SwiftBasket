@@ -32,11 +32,12 @@ public class OrderClient {
         private Long userId;
     }
 
-    public OrderData getOrder(Long orderId) {
-        log.info("Fetching order {} from order-service", orderId);
+    public OrderData getOrder(Long orderId, Long userId) {
+        log.info("Fetching order {} (user {}) from order-service", orderId, userId);
         try {
             OrderData order = restClient.get()
                     .uri("/api/v1/orders/{id}", orderId)
+                    .header("X-User-ID", String.valueOf(userId))
                     .retrieve()
                     .body(OrderData.class);
 

@@ -88,7 +88,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         // single order lookup: owner, amount and currency in one call
-        OrderClient.OrderData order = orderClient.getOrder(orderId);
+        OrderClient.OrderData order = orderClient.getOrder(orderId, userId);
         if (!order.getUserId().equals(userId)) {
             log.warn("User {} tried to pay for order {} owned by {}", userId, orderId, order.getUserId());
             throw new PaymentAccessDeniedException("You do not have access to this order");
