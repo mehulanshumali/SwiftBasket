@@ -25,6 +25,10 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
+        # map producer type ids (from payment-service) to local copies of the events
+        spring.json.type.mapping: >
+          com.SwiftBasket.payment_service.event.PaymentCompletedEvent:com.SwiftBasket.order_service.event.PaymentCompletedEvent,
+          com.SwiftBasket.payment_service.event.PaymentFailedEvent:com.SwiftBasket.order_service.event.PaymentFailedEvent
     # PRODUCER: Publishes order.placed and order.status.updated
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
