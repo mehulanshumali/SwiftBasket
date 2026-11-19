@@ -1,0 +1,79 @@
+# Product images
+
+Sourced from [Wikimedia Commons](https://commons.wikimedia.org/) (free licenses).
+
+- `BK-001` — Atom odatlar 2.jpg
+- `BK-003` — 20170927 125614 Rich Dad - Poor Dad.jpg
+- `BK-004` — Ikigai-EN-optimized-PNG.png
+- `BK-005` — Sapiens, Lithuanian.jpg
+- `BK-006` — A text book of the geography, history, constitution and civil government of Vermont; also Constitution and civil government of the U. S., a publication expressly prepared to comply with Vermont's (14777511705).jpg
+- `BK-007` — A P J Abdul Kalam.jpg
+- `BK-008` — TheAlchemist.jpg
+- `BK-009` — Silent but deadly.jpg
+- `EL-001` — Bose QuietComfort 35 II Wireless Headphones.jpg
+- `EL-002` — Samsung Galaxy Buds Live.jpg
+- `EL-003` — Apple Watch Series 7; January 2022 (01).jpg
+- `EL-004` — USB power adapter for Apple iPod, Model A1205, by Foxlink Technology Ltd-1048.jpg
+- `EL-005` — SAMSUNG BATTERY PACK (POWER BANK) EB-P4520.jpg
+- `EL-006` — Xbox-360-Pro-wController.jpg
+- `EL-007` — Wireless mouse block.jpg
+- `EL-008` — Computer desk.jpg
+- `EL-009` — JBL GO 1st generation.jpg
+- `EL-010` — Samsung Portable SSD T5, Oosterflank, Rotterdam (2020).jpg
+- `EL-011` — 15.6" Ноутбук HP Laptop 15s-eq1319ur чёрный.jpg
+- `EL-012` — Mechanical keyboard example.jpg
+- `HK-001` — Mixer-grinder-blades.jpg
+- `HK-002` — Pressure cooker - Hawkins, Contura Model - 3 litres - 4.jpg
+- `HK-003` — Airfryer Convert.jpg
+- `HK-004` — 2023 Czajnik elektryczny N'OVEEN.jpg
+- `HK-005` — Cool Top 2 induction cooktop 1972.jpg
+- `HK-006` — Vacuum Flask cooker Open.JPG
+- `HK-007` — 6311 sourdough bread in dutch oven.jpg
+- `HK-008` — Top of a pedestal fan.jpg
+- `HK-009` — Miranda en la Carraca by Arturo Michelena.jpg
+- `HK-010` — 020210818 132313 Copper cookware, early 20th century, manor house kitchen, Galicia, Poland.jpg
+- `HK-011` — Illuminated wooden shelf with many glass jars containing cookies for sale in Tokyo.jpg
+- `HK-012` — Zusammengelegte Handtücher.jpg
+- `MB-001` — Redmi Note 11 front.jpg
+- `MB-002` — Samsung S23 FE.jpg
+- `MB-003` — Back of iPhone 15.jpg
+- `MB-004` — Oneplus Nord 2.jpg
+- `MB-005` — Vivo Mansion (Nanjing).jpg
+- `MB-006` — Realme Q2 Pro Color Back.jpg
+- `MB-007` — Motorola Edge 30 Ultra front.jpg
+- `MB-008` — Nothing phone (2a).jpg
+- `MB-009` — Mobile phone case.jpg
+- `MB-010` — Wiki application02.jpg
+- `ME-001` — Levi Strauss (12640856924).jpg
+- `ME-002` — HK CWB Causeway Bay male polo shirt 條紋襯衫 uncle April 2017 IX1.jpg
+- `ME-003` — Stack of men's casual shirts.jpg
+- `ME-004` — Agung Wicaksono.jpg
+- `ME-005` — Puma Smash Leather.jpg
+- `ME-006` — Fists and track-pants (361511802).jpg
+- `ME-007` — Leather Belt for Men .jpg
+- `ME-008` — Sunglasses pic17.jpg
+- `SP-001` — Test batting averages 10 or more innings.jpg
+- `SP-002` — Badminton racket.jpg
+- `SP-004` — Nivia Ashtang Football.jpg
+- `SP-005` — Yoga Mat Made of Carpet Underlay.jpg
+- `SP-006` — A close-up view of a set of heavy dumbbells.jpg
+- `SP-007` — EFTA00000621 - Well-lit fitness room with wooden flooring featuring exercise equipment including a weight machine stationary bike and resistance bands.jpg
+- `SP-008` — Ghanaian kid (skipping rope) 02.jpg
+- `SP-009` — Tennis ball at Highgate Cricket Club, Crouch End, London.jpg
+- `TG-001` — German Monopoly board in the middle of a game.jpg
+- `TG-002` — Ludo board game.jpg
+- `TG-003` — Lego Color Guide.jpg
+- `TG-004` — RC car rock crawler.jpg
+- `TG-005` — 2023 Pluszowy miś.jpg
+- `TG-006` — Red jigsaw puzzle pieces 2.jpg
+- `WE-002` — Kurta Indian Dress Women 2.jpg
+- `WE-003` — Baba Saree Centre.jpg
+- `WE-004` — Skinny jeans 05.jpg
+- `WE-005` — CindyWhiteheadBioPic.jpg
+- `WE-006` — Young woman wearing a ribbed top and sweatpants in Madison, Wisconsin 2023.jpeg
+- `WE-007` — Adele Dejak Tote Bag h014.jpg
+- `WE-008` — Flats Shoes.jpg
+- `WE-001` — Black women's kurta (top).jpg
+- `SP-003` — Badminton racket.jpg
+- `BK-002` — Economists' Thought and Economics Book in Khmer.jpg
+- `TG-007` — Electronics experimental-system vintage 1980tees LINDY.jpg
