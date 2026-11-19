@@ -38,7 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
 
-    private static final String DEFAULT_CURRENCY = "INR";
+    @Value("${swiftbasket.currency:INR}")
+    private String currency;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -125,7 +126,7 @@ public class OrderServiceImpl implements OrderService {
                 .userId(userId)
                 .status(OrderStatus.PENDING)
                 .totalAmount(totalAmount)
-                .currency(DEFAULT_CURRENCY)
+                .currency(currency)
                 .shippingAddress(request.getShippingAddress())
                 .build());
 
@@ -257,7 +258,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         OrderStatus current = order.getStatus();
-        if (!isValidAdminTransition(current, target)) {
+        if (!current.allowedAdminStatuses().contains(target)) {
             log.warn("Admin transition rejected for order {}: {} -> {}",
                     orderId, current, target);
             throw new InvalidStatusTransitionException(
@@ -268,27 +269,6 @@ public class OrderServiceImpl implements OrderService {
                 note != null && !note.isBlank() ? note : "Status updated by admin");
         log.info("Order {} status updated by admin: {} -> {}", orderId, current, target);
         return order;
-    }
-
-    private boolean isValidAdminTransition(OrderStatus from, OrderStatus to) {
-        if (from == to) {
-            return false;
-        }
-        switch (to) {
-            case CANCELLED:
-                return from == OrderStatus.PENDING || from == OrderStatus.PAID;
-            case PAID:
-                return from == OrderStatus.PENDING;
-            case PROCESSING:
-                return from == OrderStatus.PAID;
-            case SHIPPED:
-                return from == OrderStatus.PROCESSING;
-            case DELIVERED:
-                return from == OrderStatus.SHIPPED;
-            default:
-                // PENDING and PAYMENT_FAILED are never admin-settable
-                return false;
-        }
     }
 
     private void publishOrderPlaced(Order order) {        try {

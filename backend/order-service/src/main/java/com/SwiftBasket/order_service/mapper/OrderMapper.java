@@ -17,7 +17,9 @@ public class OrderMapper {
     public OrderResponse toResponse(Order order, List<OrderItem> items) {
         return OrderResponse.builder()
                 .orderId(order.getId())
+                .userId(order.getUserId())
                 .status(order.getStatus().name())
+                .allowedAdminStatuses(order.getStatus().allowedAdminStatuses())
                 .totalAmount(order.getTotalAmount())
                 .currency(order.getCurrency())
                 .shippingAddress(order.getShippingAddress())
