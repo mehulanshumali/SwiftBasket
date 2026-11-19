@@ -43,3 +43,6 @@ data/
 
 .github/
 docs/
+### Service manager ###
+logs/
+scripts/
