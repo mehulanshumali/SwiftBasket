@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "PaymentIntentResponse", description = "Created Stripe PaymentIntent with the client secret for checkout")
+@Schema(name = "PaymentIntentResponse", description = "Stripe payment intent and available checkout options")
 public class PaymentIntentResponse {
 
     @Schema(description = "Internal payment record ID")
@@ -24,7 +24,7 @@ public class PaymentIntentResponse {
     @Schema(description = "Amount to be charged (must match order total)")
     private BigDecimal amount;
 
-    @Schema(description = "3-letter ISO currency code (INR)")
+    @Schema(description = "3-letter ISO currency code")
     private String currency;
 
     @Schema(description = "Current payment status")
@@ -35,4 +35,7 @@ public class PaymentIntentResponse {
 
     @Schema(description = "Stripe PaymentIntent reference")
     private String stripePaymentIntentId;
+
+    @Schema(description = "Configured payment method ID, available only with Stripe test credentials")
+    private String testPaymentMethodId;
 }

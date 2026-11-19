@@ -2,6 +2,7 @@ package com.SwiftBasket.payment_service.mapper;
 
 import org.springframework.stereotype.Component;
 
+import com.SwiftBasket.payment_service.client.StripeClient;
 import com.SwiftBasket.payment_service.dto.PaymentIntentResponse;
 import com.SwiftBasket.payment_service.dto.PaymentResponse;
 import com.SwiftBasket.payment_service.dto.ReceiptResponse;
@@ -9,6 +10,12 @@ import com.SwiftBasket.payment_service.entity.Payment;
 
 @Component
 public class PaymentMapper {
+
+    private final StripeClient stripeClient;
+
+    public PaymentMapper(StripeClient stripeClient) {
+        this.stripeClient = stripeClient;
+    }
 
     public PaymentIntentResponse toIntentResponse(Payment payment) {
         return PaymentIntentResponse.builder()
@@ -19,6 +26,7 @@ public class PaymentMapper {
                 .status(payment.getStatus().name())
                 .clientSecret(null)
                 .stripePaymentIntentId(payment.getStripePaymentIntentId())
+                .testPaymentMethodId(stripeClient.getTestPaymentMethodId())
                 .build();
     }
 

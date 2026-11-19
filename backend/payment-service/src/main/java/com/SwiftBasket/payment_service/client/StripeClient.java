@@ -5,13 +5,12 @@ import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.SwiftBasket.payment_service.exception.StripeApiException;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentConfirmParams;
 import com.stripe.param.PaymentIntentCreateParams;
-
-import com.SwiftBasket.payment_service.exception.StripeApiException;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -23,14 +22,21 @@ public class StripeClient {
     @Value("${stripe.api-key}")
     private String apiKey;
 
+    @Value("${stripe.test-payment-method-id:${STRIPE_TEST_PAYMENT_METHOD_ID:}}")
+    private String testPaymentMethodId;
+
     @PostConstruct
     public void init() {
         // fail-fast: bad key config should surface at boot, not at first payment
         Stripe.apiKey = apiKey;
-        log.info("Stripe client initialized (test mode)");
+        log.info("Stripe client initialized");
     }
 
-    // creates an unconfirmed PaymentIntent - the client secret is returned to the browser
+    public String getTestPaymentMethodId() {
+        boolean testMode = apiKey.startsWith("sk_test_") || apiKey.startsWith("rk_test_");
+        return testMode && testPaymentMethodId.startsWith("pm_") ? testPaymentMethodId : null;
+    }
+
     public PaymentIntent createPaymentIntent(BigDecimal amount, String currency) {
         log.info("Creating Stripe PaymentIntent - amount: {} {}", currency, amount);
         try {

@@ -20,7 +20,7 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("SwiftBasket Payment Service API")
                         .version("1.0.0")
-                        .description("Payment Service for SwiftBasket E-commerce Platform (Stripe test mode)")
+                        .description("Payment Service for SwiftBasket E-commerce Platform")
                         .contact(new Contact()
                                 .name("SwiftBasket Team")
                                 .email("support@swiftbasket.com")
