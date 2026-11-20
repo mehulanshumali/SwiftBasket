@@ -1,6 +1,7 @@
 package com.SwiftBasket.user_service.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,12 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Value("${app.base-url}")
+    private String appBaseUrl;
+
     @Override
     public void sendPasswordResetEmail(String email, String fullName, String resetToken) {
-        String resetLink = "http://localhost:8081" + "/reset-password?token=" + resetToken;
+        String resetLink = appBaseUrl + "/reset-password?token=" + resetToken;
         String htmlContent = buildPasswordResetEmailTemplate(fullName, resetLink);
         sendEmail(email, "Reset Your SwiftBasket Account Password", htmlContent);
         log.info("Password reset email sent to: {}", email);

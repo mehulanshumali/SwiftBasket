@@ -40,7 +40,7 @@ kafka_topic:
   name: user.registered
 
 app:
-  base-url: http://localhost:8081
+  base-url: http://localhost:5173
 
 # Swagger/OpenAPI Configuration
 springdoc:
