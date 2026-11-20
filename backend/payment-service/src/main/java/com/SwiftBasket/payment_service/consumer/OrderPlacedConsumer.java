@@ -1,5 +1,6 @@
 package com.SwiftBasket.payment_service.consumer;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,8 @@ public class OrderPlacedConsumer {
                 event.getOrderId(), event.getUserId(), event.getTotalAmount(), event.getCurrency());
         try {
             paymentService.createIntent(event.getUserId(), event.getOrderId());
+        } catch (DataIntegrityViolationException e) {
+            log.info("Payment for order {} already created by the checkout page", event.getOrderId());
         } catch (Exception e) {
             // createIntent is idempotent (UNIQUE order_id) and the REST fallback
             // path exists - log and move on rather than redelivering forever

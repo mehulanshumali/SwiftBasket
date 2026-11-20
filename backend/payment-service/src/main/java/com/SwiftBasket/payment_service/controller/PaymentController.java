@@ -1,6 +1,7 @@
 package com.SwiftBasket.payment_service.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,7 +57,14 @@ public class PaymentController {
 
         requireIdentity(userId);
         log.info("Payment intent request - orderId: {}, userId: {}", orderId, userId);
-        Payment payment = paymentService.createIntent(userId, orderId);
+        Payment payment;
+        try {
+            payment = paymentService.createIntent(userId, orderId);
+        } catch (DataIntegrityViolationException e) {
+            // a concurrent request or the order.placed consumer created it first
+            log.info("Payment for order {} created concurrently - returning existing", orderId);
+            payment = paymentService.getByOrderId(userId, orderId);
+        }
 
         return ResponseEntity.status(201).body(paymentMapper.toIntentResponse(payment));
     }
