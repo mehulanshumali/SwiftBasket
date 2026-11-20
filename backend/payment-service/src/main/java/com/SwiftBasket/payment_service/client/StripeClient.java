@@ -46,6 +46,8 @@ public class StripeClient {
                     .setAutomaticPaymentMethods(
                             PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
                                     .setEnabled(true)
+                                    // checkout is confirmed server-side and has no return_url
+                                    .setAllowRedirects(PaymentIntentCreateParams.AutomaticPaymentMethods.AllowRedirects.NEVER)
                                     .build())
                     .build();
 
