@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -45,6 +46,18 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED.value())
                 .message(ex.getMessage())
                 .error("INVALID_CREDENTIALS")
+                .timestamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<ErrorResponse> handleMissingHeader(MissingRequestHeaderException ex) {
+        log.warn("Missing request header: {}", ex.getHeaderName());
+        ErrorResponse response = ErrorResponse.builder()
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .message("Authentication required")
+                .error("UNAUTHORIZED")
                 .timestamp(LocalDateTime.now())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
