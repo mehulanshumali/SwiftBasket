@@ -1,6 +1,7 @@
 package com.SwiftBasket.payment_service.service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,7 @@ import com.SwiftBasket.payment_service.exception.PaymentNotFoundException;
 import com.SwiftBasket.payment_service.exception.WebhookSignatureException;
 import com.SwiftBasket.payment_service.repository.PaymentEventLogRepository;
 import com.SwiftBasket.payment_service.repository.PaymentRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.net.Webhook;
@@ -284,12 +286,15 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
+    private static final ObjectMapper JSON = new ObjectMapper();
+
     private void logEvent(Payment payment, String eventType, String description) {
         try {
             paymentEventLogRepository.save(PaymentEventLog.builder()
                     .payment(payment)
                     .eventType(eventType)
-                    .payload(description)
+                    // payload column is MySQL JSON
+                    .payload(JSON.writeValueAsString(Map.of("message", description)))
                     .createdAt(LocalDateTime.now())
                     .build());
         } catch (Exception e) {
