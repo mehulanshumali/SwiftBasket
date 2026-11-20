@@ -34,6 +34,7 @@ build/
 
 ### Databases ###
 *.sql
+!infra/mysql_init.sql
 *.sqlite
 *.db
 *.h2.db
@@ -41,8 +42,15 @@ build/
 *.derby.log
 data/
 
+### Local tooling ###
 .github/
-docs/
+
+### Docs: only these files are published ###
+docs/*
+!docs/PRD.md
+!docs/seed_data.json
+!docs/infrastructure.md
+
 ### Service manager ###
 logs/
-scripts/
+scripts/.env
