@@ -1,0 +1,709 @@
+{
+  "categories": [
+    {
+      "name": "Mobiles",
+      "description": "Smartphones, cases and screen guards"
+    },
+    {
+      "name": "Home & Kitchen",
+      "description": "Kitchen appliances, cookware and home essentials"
+    },
+    {
+      "name": "Men's Fashion",
+      "description": "Men's clothing, footwear and accessories"
+    },
+    {
+      "name": "Women's Fashion",
+      "description": "Women's clothing, ethnic wear and accessories"
+    },
+    {
+      "name": "Sports & Fitness",
+      "description": "Cricket, badminton, gym and outdoor gear"
+    },
+    {
+      "name": "Books",
+      "description": "Bestsellers, exam prep and reference"
+    },
+    {
+      "name": "Toys & Games",
+      "description": "Board games, building sets and soft toys"
+    }
+  ],
+  "products": [
+    {
+      "categoryId": 1,
+      "name": "boAt Rockerz 550 Over-Ear Bluetooth Headphones",
+      "description": "Over-ear wireless headphones with 50mm dynamic drivers, deep bass, 20-hour playback and ergonomic earcups.",
+      "price": 1999,
+      "sku": "EL-001",
+      "stockQuantity": 85,
+      "imageUrl": "/products/EL-001.jpg"
+    },
+    {
+      "categoryId": 1,
+      "name": "boAt Airdopes 141 True Wireless Earbuds",
+      "description": "TWS earbuds with 42-hour total playtime, ENx environmental noise cancellation during calls and low-latency Beast Mode for gaming.",
+      "price": 1299,
+      "sku": "EL-002",
+      "stockQuantity": 140,
+      "imageUrl": "/products/EL-002.jpg"
+    },
+    {
+      "categoryId": 1,
+      "name": "Noise ColorFit Pro 5 Alpha Smartwatch",
+      "description": "1.96-inch AMOLED smartwatch with Bluetooth calling, 100+ sports modes, SpO2 and heart-rate tracking, 7-day battery.",
+      "price": 3499,
+      "sku": "EL-003",
+      "stockQuantity": 60,
+      "imageUrl": "/products/EL-003.jpg"
+    },
+    {
+      "categoryId": 1,
+      "name": "Xiaomi 33W SonicCharge 2.0 Wall Adapter",
+      "description": "Compact 33W fast charger with USB-C to USB-C cable, supports QC and PD protocols.",
+      "price": 899,
+      "sku": "EL-004",
+      "stockQuantity": 200,
+      "imageUrl": "/products/EL-004.jpg"
+    },
+    {
+      "categoryId": 1,
+      "name": "Ambrane Stylo 20000mAh 22.5W Power Bank",
+      "description": "Slim 20000mAh power bank with 22.5W fast charging, triple output ports and pass-through support.",
+      "price": 1499,
+      "sku": "EL-005",
+      "stockQuantity": 95,
+      "imageUrl": "/products/EL-005.jpg"
+    },
+    {
+      "categoryId": 1,
+      "name": "Redgear Pro Series Wired Gamepad",
+      "description": "PC gamepad with X-input mode, dual-vibration motors, interactive backlit buttons and 1.8m braided cable.",
+      "price": 1199,
+      "sku": "EL-006",
+      "stockQuantity": 4,
+      "imageUrl": "/products/EL-006.jpg"
+    },
+    {
+      "categoryId": 1,
+      "name": "Logitech B170 Wireless Mouse",
+      "description": "Contoured wireless mouse with 2.4GHz nano receiver, 12-month battery life and precise optical tracking.",
+      "price": 699,
+      "sku": "EL-007",
+      "stockQuantity": 150,
+      "imageUrl": "/products/EL-007.jpg"
+    },
+    {
+      "categoryId": 1,
+      "name": "Dell SE2422H 24-inch Full HD Monitor",
+      "description": "24-inch 1920x1080 VA panel with 75Hz refresh rate, AMD FreeSync, HDMI and VGA inputs, 3-side bezel-less design.",
+      "price": 9499,
+      "sku": "EL-008",
+      "stockQuantity": 22,
+      "imageUrl": "/products/EL-008.jpg"
+    },
+    {
+      "categoryId": 1,
+      "name": "JBL Go 3 Portable Bluetooth Speaker",
+      "description": "Ultra-portable speaker with JBL Pro Sound, IP67 waterproof and dustproof build and 5-hour playtime.",
+      "price": 2499,
+      "sku": "EL-009",
+      "stockQuantity": 48,
+      "imageUrl": "/products/EL-009.jpg"
+    },
+    {
+      "categoryId": 1,
+      "name": "Samsung T7 1TB Portable SSD",
+      "description": "Compact external SSD with 1050 MB/s read speeds, USB 3.2 Gen 2 and shock-resistant metal body.",
+      "price": 8999,
+      "sku": "EL-010",
+      "stockQuantity": 18,
+      "imageUrl": "/products/EL-010.jpg"
+    },
+    {
+      "categoryId": 1,
+      "name": "HP 15s 12th Gen Core i5 Laptop",
+      "description": "15.6-inch FHD laptop with Core i5-1235U, 8GB DDR4 RAM, 512GB NVMe SSD and pre-loaded Windows 11.",
+      "price": 47990,
+      "sku": "EL-011",
+      "stockQuantity": 9,
+      "imageUrl": "/products/EL-011.jpg"
+    },
+    {
+      "categoryId": 1,
+      "name": "Zebronics 87-Key Mechanical Keyboard",
+      "description": "Tenkeyless mechanical keyboard with blue switches, rainbow backlight, anti-ghosting and aluminium top plate.",
+      "price": 1899,
+      "sku": "EL-012",
+      "stockQuantity": 35,
+      "imageUrl": "/products/EL-012.jpg"
+    },
+    {
+      "categoryId": 2,
+      "name": "Redmi Note 13 5G (6GB RAM, 128GB)",
+      "description": "6.67-inch 120Hz AMOLED display, 108MP triple camera, MediaTek Dimensity 6080 and 5000mAh battery with 33W fast charging.",
+      "price": 15999,
+      "sku": "MB-001",
+      "stockQuantity": 40,
+      "imageUrl": "/products/MB-001.jpg"
+    },
+    {
+      "categoryId": 2,
+      "name": "Samsung Galaxy S23 FE 5G (128GB)",
+      "description": "6.4-inch Dynamic AMOLED 2X, 50MP OIS camera, Exynos 2200, IP68 rating and 4500mAh battery.",
+      "price": 34999,
+      "sku": "MB-002",
+      "stockQuantity": 15,
+      "imageUrl": "/products/MB-002.jpg"
+    },
+    {
+      "categoryId": 2,
+      "name": "Apple iPhone 15 (128GB)",
+      "description": "6.1-inch Super Retina XDR, A16 Bionic, 48MP main camera with 2x telephoto-quality zoom and USB-C charging.",
+      "price": 64900,
+      "sku": "MB-003",
+      "stockQuantity": 12,
+      "imageUrl": "/products/MB-003.jpg"
+    },
+    {
+      "categoryId": 2,
+      "name": "OnePlus Nord CE4 Lite 5G",
+      "description": "6.7-inch 120Hz AMOLED, Snapdragon 7 Gen 3, 50MP Sony LYT-600 camera and 5500mAh battery with 100W SuperVOOC.",
+      "price": 19999,
+      "sku": "MB-004",
+      "stockQuantity": 25,
+      "imageUrl": "/products/MB-004.jpg"
+    },
+    {
+      "categoryId": 2,
+      "name": "Vivo T3 5G (8GB RAM, 128GB)",
+      "description": "6.67-inch 120Hz display, Dimensity 7200, 50MP Sony OIS camera and 5000mAh battery.",
+      "price": 17499,
+      "sku": "MB-005",
+      "stockQuantity": 30,
+      "imageUrl": "/products/MB-005.jpg"
+    },
+    {
+      "categoryId": 2,
+      "name": "Realme Narzo 70 Turbo 5G",
+      "description": "6.67-inch 120Hz AMOLED, Dimensity 7300, 45W SUPERVOOC and Air Gesture 2.0 controls.",
+      "price": 14999,
+      "sku": "MB-006",
+      "stockQuantity": 35,
+      "imageUrl": "/products/MB-006.jpg"
+    },
+    {
+      "categoryId": 2,
+      "name": "Motorola Edge 50 Fusion 5G",
+      "description": "6.67-inch curved pOLED 144Hz display, Snapdragon 7s Gen 2, 50MP OIS camera and 5000mAh battery.",
+      "price": 20999,
+      "sku": "MB-007",
+      "stockQuantity": 20,
+      "imageUrl": "/products/MB-007.jpg"
+    },
+    {
+      "categoryId": 2,
+      "name": "Nothing Phone (2a)",
+      "description": "Distinctive transparent back with Glyph lights, 6.7-inch AMOLED 120Hz, Dimensity 7200 Pro and 50MP dual camera.",
+      "price": 23999,
+      "sku": "MB-008",
+      "stockQuantity": 0,
+      "imageUrl": "/products/MB-008.jpg"
+    },
+    {
+      "categoryId": 2,
+      "name": "Armoured Shockproof Phone Case",
+      "description": "Military-grade drop-protection case with raised camera lip and anti-slip matte finish.",
+      "price": 299,
+      "sku": "MB-009",
+      "stockQuantity": 120,
+      "imageUrl": "/products/MB-009.jpg"
+    },
+    {
+      "categoryId": 2,
+      "name": "Tempered Glass Screen Protector",
+      "description": "9H hardness full-coverage glass with oleophobic coating and bubble-free installation kit.",
+      "price": 199,
+      "sku": "MB-010",
+      "stockQuantity": 300,
+      "imageUrl": "/products/MB-010.jpg"
+    },
+    {
+      "categoryId": 3,
+      "name": "Prestige Iris Plus 750W Mixer Grinder",
+      "description": "750W mixer grinder with 3 stainless steel jars, 3-speed control and overload protection.",
+      "price": 2799,
+      "sku": "HK-001",
+      "stockQuantity": 45,
+      "imageUrl": "/products/HK-001.jpg"
+    },
+    {
+      "categoryId": 3,
+      "name": "Hawkins Contura 3L Pressure Cooker",
+      "description": "Hard-anodised 3-litre cooker with curved body for easy stirring, gas and induction compatible.",
+      "price": 2199,
+      "sku": "HK-002",
+      "stockQuantity": 55,
+      "imageUrl": "/products/HK-002.jpg"
+    },
+    {
+      "categoryId": 3,
+      "name": "Philips Air Fryer 4.1L (HD9200/90)",
+      "description": "Rapid Air technology fries with up to 90% less fat, 4.1-litre basket and dishwasher-safe parts.",
+      "price": 7499,
+      "sku": "HK-003",
+      "stockQuantity": 28,
+      "imageUrl": "/products/HK-003.jpg"
+    },
+    {
+      "categoryId": 3,
+      "name": "Pigeon Favourite 1.5L Electric Kettle",
+      "description": "Stainless steel kettle with auto cut-off, cool-touch handle and 1500W quick boil.",
+      "price": 649,
+      "sku": "HK-004",
+      "stockQuantity": 0,
+      "imageUrl": "/products/HK-004.jpg"
+    },
+    {
+      "categoryId": 3,
+      "name": "Prestige PIC 16.0 Plus Induction Cooktop",
+      "description": "1900W induction cooktop with Indian menu presets, automatic shut-off and energy-saving timer.",
+      "price": 2190,
+      "sku": "HK-005",
+      "stockQuantity": 33,
+      "imageUrl": "/products/HK-005.jpg"
+    },
+    {
+      "categoryId": 3,
+      "name": "Milton Thermosteel Flip Lid Flask 1L",
+      "description": "24-hour hot or cold vacuum-insulated flask with leak-proof flip lid.",
+      "price": 1099,
+      "sku": "HK-006",
+      "stockQuantity": 90,
+      "imageUrl": "/products/HK-006.jpg"
+    },
+    {
+      "categoryId": 3,
+      "name": "Cello Max Fresh 1000ml Casserole",
+      "description": "Insulated casserole that keeps food hot for hours, odourless food-grade inner body.",
+      "price": 999,
+      "sku": "HK-007",
+      "stockQuantity": 64,
+      "imageUrl": "/products/HK-007.jpg"
+    },
+    {
+      "categoryId": 3,
+      "name": "Bajaj Ultima 400mm Pedestal Fan",
+      "description": "High-speed pedestal fan with adjustable height, 3 blades and smooth oscillation.",
+      "price": 1699,
+      "sku": "HK-008",
+      "stockQuantity": 18,
+      "imageUrl": "/products/HK-008.jpg"
+    },
+    {
+      "categoryId": 3,
+      "name": "Bombay Dyeing Cotton Double Bedsheet Set",
+      "description": "144 TC pure cotton double bedsheet with 2 pillow covers, fade-resistant colours.",
+      "price": 899,
+      "sku": "HK-009",
+      "stockQuantity": 70,
+      "imageUrl": "/products/HK-009.jpg"
+    },
+    {
+      "categoryId": 3,
+      "name": "Prestige Non-Stick Induction Cookware Set (5 pcs)",
+      "description": "5-piece non-stick cookware set with induction base and PFOA-free coating.",
+      "price": 2999,
+      "sku": "HK-010",
+      "stockQuantity": 3,
+      "imageUrl": "/products/HK-010.jpg"
+    },
+    {
+      "categoryId": 3,
+      "name": "Borosilicate Glass Storage Container Set (3 pcs)",
+      "description": "Airtight oven-safe glass containers with lock lids, ideal for meal prep.",
+      "price": 1199,
+      "sku": "HK-011",
+      "stockQuantity": 50,
+      "imageUrl": "/products/HK-011.jpg"
+    },
+    {
+      "categoryId": 3,
+      "name": "Ultra-Soft Cotton Bath Towel Set (4 pcs)",
+      "description": "500 GSM cotton towels, quick-dry and highly absorbent.",
+      "price": 799,
+      "sku": "HK-012",
+      "stockQuantity": 88,
+      "imageUrl": "/products/HK-012.jpg"
+    },
+    {
+      "categoryId": 4,
+      "name": "Levi's Men's 511 Slim Fit Jeans",
+      "description": "Mid-rise slim-fit stretch denim with a clean finish and classic five-pocket styling.",
+      "price": 2499,
+      "sku": "ME-001",
+      "stockQuantity": 42,
+      "imageUrl": "/products/ME-001.jpg"
+    },
+    {
+      "categoryId": 4,
+      "name": "U.S. Polo Assn. Men's Cotton Polo T-Shirt",
+      "description": "Breathable cotton pique polo with ribbed collar and embroidered pony logo.",
+      "price": 1199,
+      "sku": "ME-002",
+      "stockQuantity": 85,
+      "imageUrl": "/products/ME-002.jpg"
+    },
+    {
+      "categoryId": 4,
+      "name": "Allen Solly Men's Slim Fit Casual Shirt",
+      "description": "Slim-fit cotton shirt with semi-cutaway collar and curved hem.",
+      "price": 1599,
+      "sku": "ME-003",
+      "stockQuantity": 38,
+      "imageUrl": "/products/ME-003.jpg"
+    },
+    {
+      "categoryId": 4,
+      "name": "Van Heusen Men's Flex Formal Trousers",
+      "description": "4-way stretch formal trousers with wrinkle-resistant finish and hidden expandable waistband.",
+      "price": 1799,
+      "sku": "ME-004",
+      "stockQuantity": 27,
+      "imageUrl": "/products/ME-004.jpg"
+    },
+    {
+      "categoryId": 4,
+      "name": "Puma Men's Smash V2 L Sneakers",
+      "description": "Classic court-inspired sneakers with SoftFoam+ sockliner and rubber outsole.",
+      "price": 2799,
+      "sku": "ME-005",
+      "stockQuantity": 44,
+      "imageUrl": "/products/ME-005.jpg"
+    },
+    {
+      "categoryId": 4,
+      "name": "HRX Men's Regular Fit Track Pants",
+      "description": "Moisture-wicking track pants with zip pockets and tapered fit.",
+      "price": 1299,
+      "sku": "ME-006",
+      "stockQuantity": 60,
+      "imageUrl": "/products/ME-006.jpg"
+    },
+    {
+      "categoryId": 4,
+      "name": "Woodland Men's Leather Belt",
+      "description": "Full-grain leather belt with brushed metal buckle and reversible styling.",
+      "price": 999,
+      "sku": "ME-007",
+      "stockQuantity": 5,
+      "imageUrl": "/products/ME-007.jpg"
+    },
+    {
+      "categoryId": 4,
+      "name": "Fastrack Men's UV Protection Sunglasses",
+      "description": "Polarised UV400 sunglasses with lightweight TR90 frame and hard case.",
+      "price": 1499,
+      "sku": "ME-008",
+      "stockQuantity": 33,
+      "imageUrl": "/products/ME-008.jpg"
+    },
+    {
+      "categoryId": 5,
+      "name": "Anouk Printed Rayon Kurta with Palazzo",
+      "description": "Straight kurta with coordinating palazzo in soft printed rayon, three-quarter sleeves.",
+      "price": 1199,
+      "sku": "WE-001",
+      "stockQuantity": 55,
+      "imageUrl": "/products/WE-001.jpg"
+    },
+    {
+      "categoryId": 5,
+      "name": "Libas Cotton Kurta Set",
+      "description": "Printed cotton kurta with trousers and dupatta, ideal for daily and festive wear.",
+      "price": 1499,
+      "sku": "WE-002",
+      "stockQuantity": 48,
+      "imageUrl": "/products/WE-002.jpg"
+    },
+    {
+      "categoryId": 5,
+      "name": "Kanjivaram Art Silk Saree with Blouse Piece",
+      "description": "Zari-bordered art silk saree with unstitched blouse piece, traditional weave-inspired design.",
+      "price": 2999,
+      "sku": "WE-003",
+      "stockQuantity": 20,
+      "imageUrl": "/products/WE-003.jpg"
+    },
+    {
+      "categoryId": 5,
+      "name": "Levi's Women's High-Rise Skinny Jeans",
+      "description": "Stretchable high-rise skinny denim with ankle-length cut.",
+      "price": 2299,
+      "sku": "WE-004",
+      "stockQuantity": 30,
+      "imageUrl": "/products/WE-004.jpg"
+    },
+    {
+      "categoryId": 5,
+      "name": "Puma Women's Smash V2 Sneakers",
+      "description": "Low-top lace-up sneakers with cushioned sockliner and retro court look.",
+      "price": 2799,
+      "sku": "WE-005",
+      "stockQuantity": 25,
+      "imageUrl": "/products/WE-005.jpg"
+    },
+    {
+      "categoryId": 5,
+      "name": "Vero Moda Women's Ribbed Crop Top",
+      "description": "Stretch-fit ribbed crop top with round neck and full sleeves.",
+      "price": 999,
+      "sku": "WE-006",
+      "stockQuantity": 70,
+      "imageUrl": "/products/WE-006.jpg"
+    },
+    {
+      "categoryId": 5,
+      "name": "Zouk Vegan Leather Tote Handbag",
+      "description": "Handcrafted vegan leather tote with laptop sleeve and water-resistant lining.",
+      "price": 1899,
+      "sku": "WE-007",
+      "stockQuantity": 2,
+      "imageUrl": "/products/WE-007.jpg"
+    },
+    {
+      "categoryId": 5,
+      "name": "Bata Women's Slip-On Flats",
+      "description": "Cushioned footbed slip-on flats with flexible outsole for all-day comfort.",
+      "price": 1499,
+      "sku": "WE-008",
+      "stockQuantity": 36,
+      "imageUrl": "/products/WE-008.jpg"
+    },
+    {
+      "categoryId": 6,
+      "name": "SG Player Kashmir Willow Cricket Bat",
+      "description": "Hand-picked Kashmir willow bat with traditional shape and premium grip, ideal for leather ball.",
+      "price": 2499,
+      "sku": "SP-001",
+      "stockQuantity": 16,
+      "imageUrl": "/products/SP-001.jpg"
+    },
+    {
+      "categoryId": 6,
+      "name": "Yonex GR 303 Aluminium Badminton Racquet",
+      "description": "Lightweight aluminium racquet with low-torsion shaft, strung and ready to play.",
+      "price": 799,
+      "sku": "SP-002",
+      "stockQuantity": 65,
+      "imageUrl": "/products/SP-002.jpg"
+    },
+    {
+      "categoryId": 6,
+      "name": "Yonex Astrox 100 Game Badminton Racquet",
+      "description": "Carbon-graphite racquet with Rotational Generator System for steep power smashes.",
+      "price": 8999,
+      "sku": "SP-003",
+      "stockQuantity": 6,
+      "imageUrl": "/products/SP-003.jpg"
+    },
+    {
+      "categoryId": 6,
+      "name": "Nivia Estadio Football (Size 5)",
+      "description": "Machine-stitched football with butyl bladder for excellent air and shape retention.",
+      "price": 1299,
+      "sku": "SP-004",
+      "stockQuantity": 24,
+      "imageUrl": "/products/SP-004.jpg"
+    },
+    {
+      "categoryId": 6,
+      "name": "Boldfit Yoga Mat 6mm",
+      "description": "Anti-skid 6mm mat with carrying strap and marker lines for alignment.",
+      "price": 699,
+      "sku": "SP-005",
+      "stockQuantity": 80,
+      "imageUrl": "/products/SP-005.jpg"
+    },
+    {
+      "categoryId": 6,
+      "name": "Kore Poly Dumbbell Set 20kg (2 x 10kg)",
+      "description": "Hex dumbbells with anti-slip neoprene grip and spin-lock collars.",
+      "price": 1699,
+      "sku": "SP-006",
+      "stockQuantity": 20,
+      "imageUrl": "/products/SP-006.jpg"
+    },
+    {
+      "categoryId": 6,
+      "name": "Resistance Band Set (5 Levels)",
+      "description": "Five natural-latex tubes from 5 to 35kg resistance with door anchor and travel pouch.",
+      "price": 399,
+      "sku": "SP-007",
+      "stockQuantity": 100,
+      "imageUrl": "/products/SP-007.jpg"
+    },
+    {
+      "categoryId": 6,
+      "name": "Cosco Speed Skipping Rope",
+      "description": "Ball-bearing swivel rope with ergonomic handles for smooth high-speed skipping.",
+      "price": 299,
+      "sku": "SP-008",
+      "stockQuantity": 110,
+      "imageUrl": "/products/SP-008.jpg"
+    },
+    {
+      "categoryId": 6,
+      "name": "SG Club Tennis Cricket Balls (Pack of 3)",
+      "description": "Heavy-duty tennis cricket balls with waterproof rubber core.",
+      "price": 349,
+      "sku": "SP-009",
+      "stockQuantity": 90,
+      "imageUrl": "/products/SP-009.jpg"
+    },
+    {
+      "categoryId": 7,
+      "name": "Atomic Habits",
+      "description": "James Clear's framework for building good habits and breaking bad ones through tiny changes.",
+      "price": 349,
+      "sku": "BK-001",
+      "stockQuantity": 150,
+      "imageUrl": "/products/BK-001.jpg"
+    },
+    {
+      "categoryId": 7,
+      "name": "The Psychology of Money",
+      "description": "Morgan Housel's timeless lessons on wealth, greed and happiness.",
+      "price": 249,
+      "sku": "BK-002",
+      "stockQuantity": 180,
+      "imageUrl": "/products/BK-002.jpg"
+    },
+    {
+      "categoryId": 7,
+      "name": "Rich Dad Poor Dad",
+      "description": "Robert Kiyosaki's classic on financial literacy and making money work for you.",
+      "price": 199,
+      "sku": "BK-003",
+      "stockQuantity": 160,
+      "imageUrl": "/products/BK-003.jpg"
+    },
+    {
+      "categoryId": 7,
+      "name": "Ikigai: The Japanese Secret to a Long and Happy Life",
+      "description": "Héctor García and Francesc Miralles on finding purpose in everyday living.",
+      "price": 299,
+      "sku": "BK-004",
+      "stockQuantity": 140,
+      "imageUrl": "/products/BK-004.png"
+    },
+    {
+      "categoryId": 7,
+      "name": "Sapiens: A Brief History of Humankind",
+      "description": "Yuval Noah Harari's account of how Homo sapiens came to dominate the planet.",
+      "price": 399,
+      "sku": "BK-005",
+      "stockQuantity": 95,
+      "imageUrl": "/products/BK-005.jpg"
+    },
+    {
+      "categoryId": 7,
+      "name": "Indian Polity",
+      "description": "M. Laxmikanth's comprehensive reference on the Indian Constitution and governance.",
+      "price": 649,
+      "sku": "BK-006",
+      "stockQuantity": 70,
+      "imageUrl": "/products/BK-006.jpg"
+    },
+    {
+      "categoryId": 7,
+      "name": "Wings of Fire",
+      "description": "The autobiography of A P J Abdul Kalam, India's Missile Man.",
+      "price": 225,
+      "sku": "BK-007",
+      "stockQuantity": 88,
+      "imageUrl": "/products/BK-007.jpg"
+    },
+    {
+      "categoryId": 7,
+      "name": "The Alchemist",
+      "description": "Paulo Coelho's fable about following your dreams.",
+      "price": 199,
+      "sku": "BK-008",
+      "stockQuantity": 130,
+      "imageUrl": "/products/BK-008.jpg"
+    },
+    {
+      "categoryId": 7,
+      "name": "The Silent Patient",
+      "description": "Alex Michaelides' gripping psychological thriller with a famous twist.",
+      "price": 249,
+      "sku": "BK-009",
+      "stockQuantity": 4,
+      "imageUrl": "/products/BK-009.jpg"
+    },
+    {
+      "categoryId": 8,
+      "name": "Monopoly Classic Board Game",
+      "description": "The classic property-trading game for 2-6 players, ages 8 and up.",
+      "price": 799,
+      "sku": "TG-001",
+      "stockQuantity": 35,
+      "imageUrl": "/products/TG-001.jpg"
+    },
+    {
+      "categoryId": 8,
+      "name": "Funskool Travel Ludo",
+      "description": "Compact magnetic ludo board, ideal for travel.",
+      "price": 199,
+      "sku": "TG-002",
+      "stockQuantity": 85,
+      "imageUrl": "/products/TG-002.jpg"
+    },
+    {
+      "categoryId": 8,
+      "name": "Wooden Building Blocks (100 pcs)",
+      "description": "Non-toxic beech-wood blocks in a storage bag for open-ended play.",
+      "price": 899,
+      "sku": "TG-003",
+      "stockQuantity": 47,
+      "imageUrl": "/products/TG-003.jpg"
+    },
+    {
+      "categoryId": 8,
+      "name": "Remote Control Rock Crawler 1:14",
+      "description": "4WD RC car with 2.4GHz controller, all-terrain tyres and 40-minute runtime.",
+      "price": 1799,
+      "sku": "TG-004",
+      "stockQuantity": 8,
+      "imageUrl": "/products/TG-004.jpg"
+    },
+    {
+      "categoryId": 8,
+      "name": "2ft Teddy Bear Soft Toy",
+      "description": "Super-soft huggable teddy made with recyclable fibre filling.",
+      "price": 649,
+      "sku": "TG-005",
+      "stockQuantity": 52,
+      "imageUrl": "/products/TG-005.jpg"
+    },
+    {
+      "categoryId": 8,
+      "name": "500-Piece Jigsaw Puzzle — World Map",
+      "description": "Premium puzzle board with poster guide, finished size 70 x 50 cm.",
+      "price": 399,
+      "sku": "TG-006",
+      "stockQuantity": 40,
+      "imageUrl": "/products/TG-006.jpg"
+    },
+    {
+      "categoryId": 8,
+      "name": "Science Experiment Kit (Ages 8+)",
+      "description": "50+ safe hands-on physics and chemistry experiments with an illustrated manual.",
+      "price": 999,
+      "sku": "TG-007",
+      "stockQuantity": 3,
+      "imageUrl": "/products/TG-007.jpg"
+    }
+  ]
+}
