@@ -19,26 +19,47 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MailtrapEmailSender implements EmailSender {
 
+    private static final int MAX_ATTEMPTS = 3;
+    private static final long RATE_LIMIT_BACKOFF_MS = 2000;
+
     @Autowired
     private JavaMailSender mailSender;
 
+    // Mailtrap rejects concurrent sends from parallel Kafka listeners with 550 "Too many emails per second"
     @Override
-    public void send(String to, String subject, String htmlBody) {
+    public synchronized void send(String to, String subject, String htmlBody) {
+        MimeMessage message;
         try {
-            MimeMessage message = mailSender.createMimeMessage();
+            message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
             helper.setFrom("no-reply@swiftbasket.com");
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(htmlBody, true);
-            mailSender.send(message);
-            log.info("Email sent to {} - subject: {}", to, subject);
         } catch (MessagingException e) {
             log.error("Failed to build email for {} - subject: {}: {}", to, subject, e.getMessage());
             throw new EmailSendException("Failed to build email");
-        } catch (Exception e) {
-            log.error("Failed to send email to {} - subject: {}: {}", to, subject, e.getMessage());
-            throw new EmailSendException("Failed to send email");
+        }
+
+        for (int attempt = 1; ; attempt++) {
+            try {
+                mailSender.send(message);
+                log.info("Email sent to {} - subject: {}", to, subject);
+                return;
+            } catch (Exception e) {
+                boolean rateLimited = String.valueOf(e.getMessage()).contains("Too many emails");
+                if (!rateLimited || attempt >= MAX_ATTEMPTS) {
+                    log.error("Failed to send email to {} - subject: {}: {}", to, subject, e.getMessage());
+                    throw new EmailSendException("Failed to send email");
+                }
+                log.warn("Mailtrap rate limit hit for {} - retrying (attempt {}/{})", to, attempt + 1, MAX_ATTEMPTS);
+                try {
+                    Thread.sleep(RATE_LIMIT_BACKOFF_MS * attempt);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new EmailSendException("Failed to send email");
+                }
+            }
         }
     }
 }
