@@ -59,12 +59,4 @@ public class OrderClient {
             throw new OrderServiceUnavailableException("Order service is currently unavailable");
         }
     }
-
-    public BigDecimal getOrderAmount(Long orderId) {
-        return getOrder(orderId).getTotalAmount();
-    }
-
-    public String getOrderCurrency(Long orderId) {
-        return getOrder(orderId).getCurrency();
-    }
 }
